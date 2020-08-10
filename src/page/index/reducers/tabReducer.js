@@ -25,7 +25,7 @@ const changeTab = (state, action)=>{
 
 };
 
-
+// reducer
 const tabReducer = (state = initState, action) => {
 
     switch(action.type) {

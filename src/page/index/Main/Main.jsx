@@ -45,6 +45,13 @@ class Main extends React.Component {
     }
 }
 
+/* connect */
+// // 当前组件通过 this.props.key 就可以获取
+// export default connect(
+//     state =>({
+//         key: state.tabReducer.num
+//     })
+// )(Main)
 export default withRouter(connect(
     // state =>({
         
