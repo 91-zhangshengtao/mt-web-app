@@ -1,5 +1,6 @@
 import { CHANGE_TAB } from '../actions/actionTypes.js';
 import { TABKEY } from '../config.js';
+// 初始值
 const initState = {
     tabs: [
         {
@@ -18,6 +19,7 @@ const initState = {
     activeKey: TABKEY.my
 };
 
+// 切换底部tab栏
 const changeTab = (state, action)=>{
     let activeKey = action.obj.activeKey;
 
@@ -25,7 +27,7 @@ const changeTab = (state, action)=>{
 
 };
 
-// reducer
+/* reducer */
 const tabReducer = (state = initState, action) => {
 
     switch(action.type) {

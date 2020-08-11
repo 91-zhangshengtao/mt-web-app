@@ -1,0 +1,19 @@
+{   
+    // eslint:recommended 官方推荐    plugin:react/recommended  基于react
+    "extends": ["eslint:recommended" ,"plugin:react/recommended"],
+    "parser" : "babel-eslint", // babel-eslint解析文件
+
+    "globals": { // 全局变量 eslint不识别
+        "window": true,
+        "document": true,
+        "module": true,
+        "require": true,
+        "console": true
+    },
+    "rules": { // off 干掉哪些
+        "react/prop-types": "off",
+        "no-console": "off",
+        "no-debugger": "off",
+        "no-unused-vars": "off"
+    }
+}

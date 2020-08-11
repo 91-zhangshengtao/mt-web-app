@@ -15,6 +15,8 @@
 - 安装webpack@4.3.0 webpack-cli@2.0.12
   npm i webpack@4.3.0 --save
   npm i webpack-cli@2.0.12 --save
+  npm i webpack-dev-server@3.1.4 --save     // dev环境运行 在内存中生成打包后的文件夹
+
 - 新建src文件夹 目录
   
 - 新建webpack配置文件 (linux touch新建文件)
@@ -22,7 +24,7 @@
   webpack.config.build.js
 
 - 安装 webpack配置 插件
-  html-webpack-plugin@3.2.0
+  html-webpack-plugin@3.2.0      // html模板
   html-webpack-inline-source-plugin@0.0.10
 
 - react相关的插件
@@ -36,7 +38,6 @@
 
 - 安装babel插件
   babel-core@6.26.0
-  babel-eslint@8.2.3
   babel-loader@7.1.4
   babel-plugin-react-hot-loader@3.0.0-beta.6
   babel-preset-es2015@6.24.1
@@ -49,10 +50,20 @@
   css-loader@0.28.11
   style-loader@0.20.3
   sass-loader@6.0.7
-  sass-resources-loader@1.3.3
+  sass-resources-loader@1.3.3 // 打包时加载进去
   node-sass@4.9.0
   url-loader@1.0.1
   file-loader@1.1.11
+
+- eslint
+  eslint@4.19.1
+  eslint-loader@2.0.0
+  eslint-plugin-react@7.7.0
+  babel-eslint@8.2.3
+
+- webpack热加载
+  react-hot-loader@4.0.0
+  babel-plugin-react-hot-loader@3.0.0-beta.6
 ```
 ```json
 "scripts": {
@@ -97,7 +108,114 @@ react-family/
     |──.eslint                                  * eslint配置文件
     |__.babelrc                                 * babel配置文件
 ```
-3. redux-react的基本使用
+3. 构建完善
+```
+- 使用rem
+  新建page/index/static/rem.js文件
+  在入口index.html引入
+
+- 使用热模块替换(HMR)/热更新
+- 加入eslint(越早越好)
+```
+- rem
+```js
+(function(){
+    var docEl = document.documentElement;
+
+    function setRemUint(){
+        var rem = docEl.clientWidth / 10;
+        docEl.style.fontSize = rem + 'px';
+    }
+
+    setRemUint();
+
+    window.addEventListener('resize', setRemUint);
+})();
+```
+- 封装转rem的全局函数
+**在webpack中结合插件sass-resources-loader@1.3.3打包时可加载进去**
+**结合vscode插件 Px to rem with scss, 操作:选中alt+c**
+**去~/.vscode/文件夹 `rem(${parseInt(val)})`改为`px2rem(${parseInt(val)}px)` 可自定义**
+```scss
+@function px2rem($px){
+    $rem: 37.5px; // 基于iphone6
+    @return ($px / $rem) + rem;
+}
+```
+- eslint(新建src/.eslint文件)
+```json
+{   
+    // eslint:recommended 官方推荐    plugin:react/recommended  基于react
+    "extends": ["eslint:recommended" ,"plugin:react/recommended"],
+    "parser" : "babel-eslint", // babel-eslint解析文件
+
+    "globals": { // 全局变量 eslint不识别
+        "window": true,
+        "document": true,
+        "module": true,
+        "require": true,
+        "console": true
+    },
+    "rules": { // off 干掉哪些
+        "react/prop-types": "off",
+        "no-console": "off",
+        "no-debugger": "off"
+    }
+}
+```
+- eslint(webpack.config.js中) 
+```js
+{ test: /\.(js|jsx)$/, use: [
+        {loader: 'babel-loader'},
+        {loader: 'eslint-loader'} // 加eslint-loader
+    ],
+    include: srcRoot
+}
+```
+- wepack 模块热更新
+**官网有参考配置**
+```js
+module.exports ={
+    devServer: {
+        contentBase: devPath,
+        hot: true // 热更新
+    },
+    plugins: [
+        new webpack.NamedModulesPlugin(), // 热更新
+        new webpack.HotModuleReplacementPlugin(), //热更新
+    ].concat(htmlArray) // htmlArray:template 配置
+}
+```
+- page/index/Main/Container.jsx组件 热更新
+```jsx
+import React from 'react';
+
+import Main from './Main.jsx';
+import { hot } from 'react-hot-loader';
+
+
+class Container extends React.Component {
+    render() {
+        return <Main />
+    }
+}
+
+export default hot(module)(Container)
+// export default Container
+```
+- redux热更新 page/index/store,js
+```js
+// redux热更新
+if (module.hot) {
+    module.hot.accept('./reducers/main', ()=>{
+        const nextRootReducer = require('./reducers/main.js').default;
+        store.replaceReducer(nextRootReducer)
+    })
+}
+```
+
+
+4. redux-react的基本使用
 ```
 - action
   dispatch
@@ -244,8 +362,11 @@ ReactDom.render(
 
 
 
-## 二、项目
-1.  
+## 二、项目开发
+**一般来说组件内最外层div className和组件名一致**
+1.  BottomBar组件(首页底部tab栏)
+
+2. 
 
 
 

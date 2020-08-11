@@ -25,13 +25,13 @@ const store = createStore(
     // applyMiddleware(thunk,historyMiddl)
 );
 
-
-// if (module.hot) {
-//     module.hot.accept('./reducers/main', ()=>{
-//         const nextRootReducer = require('./reducers/main.js').default;
-//         store.replaceReducer(nextRootReducer)
-//     });
-// }
+// redux热更新
+if (module.hot) {
+    module.hot.accept('./reducers/main', ()=>{
+        const nextRootReducer = require('./reducers/main.js').default;
+        store.replaceReducer(nextRootReducer)
+    });
+}
 module.exports = {
     store,
     // history

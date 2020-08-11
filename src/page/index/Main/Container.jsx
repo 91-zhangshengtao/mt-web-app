@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Main from './Main.jsx';
-// import { hot } from 'react-hot-loader';
+import { hot } from 'react-hot-loader';
 
 
 class Container extends React.Component {
@@ -10,5 +10,5 @@ class Container extends React.Component {
     }
 }
 
-// export default hot(module)(Container);
-export default Container
+export default hot(module)(Container);
+// export default Container
