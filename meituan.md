@@ -364,9 +364,75 @@ ReactDom.render(
 
 ## 二、项目开发
 **一般来说组件内最外层div className和组件名一致**
-1.  BottomBar组件(首页底部tab栏)
+1. BottomBar组件(首页底部tab栏) page/index/BottomBar/
 
-2. 
+2. Home组件(首页tab) page/index/Home/
 
+- Header组件(顶部banner)  page/index/Home/Header/
+```
+- 图片img,如果依赖后台数据变化的用<img src=""/>,如果一成不变的用background
+  	地址http/https简写
+		<img src="//xs01.meituan.net/waimai_i/img/bannertemp.e8a6fa63.jpg"/>
+
+- SearchBar设置了absolute定位
+  	<div className="header">
+        <SearchBar />
+        <img className="banner-img" src="//xs01.meituan.net/waimai_i/img/bannertemp.e8a6fa63.jpg"/>
+    </div>
+```
+- SearchBar组件(顶部搜索框) page/index/Home/SearchBar/
+```
+- icon和文字横向对齐 这里通过display:inline-block;
+- 使用伪类 加icon
+  &:before {
+		content: '';
+		display: block;
+		position: absolute;
+		width: px2rem(14px);
+		height: px2rem(14px);
+		background-image: url('./img/searchIcon.png');
+		background-size: cover;
+		top: px2rem(7px);
+		left: px2rem(10px);
+  }
+- 背景图
+  background-image: url('./img/arrowIcon.png'); 
+  background-size: cover; 
+```
+- Category组件(外卖类别) page/index/Home/Category/
+```js
+// - actions
+  export const getHeaderData = ()=> async () =>{
+    let resp = await axios({
+        method: 'get',
+        url: './json/head.json',
+    });
+
+    return {
+        type: HEAD_DATA,
+        obj: resp.data
+    }
+
+	}
+
+// - reducers
+  const getCategory = (state, action) =>{
+    return { ...state, items: action.obj.data.primary_filter};
+  }
+	const categoryReducer = (state = initState, action) => {
+			switch(action.type) {
+					case HEAD_DATA: return getCategory(state, action);
+					default: return state;
+			}
+	}
+
+// - 组件中使用
+	this.props.dispatch(getHeaderData())
+	export default connect(
+    state =>({
+        items: state.categoryReducer.items
+    })
+	)(Category);
+```
 
 

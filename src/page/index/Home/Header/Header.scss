@@ -1,0 +1,13 @@
+/*  SearchBar设置了absolute定位
+    <div className="header">
+        <SearchBar />
+        <img className="banner-img" src="//xs01.meituan.net/waimai_i/img/bannertemp.e8a6fa63.jpg"/>
+    </div>
+*/
+.header {
+    position: relative;
+    .banner-img {
+        width: 100%;
+        height: px2rem(178px);
+    }
+}

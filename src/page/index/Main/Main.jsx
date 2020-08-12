@@ -36,11 +36,6 @@ class Main extends React.Component {
 
         return (
             <div>
-                <span>1233</span>
-                <span>1233</span>
-                <span>1233</span>
-                <span>1233</span>
-                <span>1233</span>
                 {/* <Route exact path="/home" component={Home}/>
                 <Route path="/order" component={Order}/>
                 <Route path="/my" component={My}/>
