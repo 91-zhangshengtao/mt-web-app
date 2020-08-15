@@ -67,6 +67,7 @@ class ContentList extends React.Component {
                     <span>附近商家</span>
                     <span className="title-line"></span>
                 </h4>
+                {/* 滚动加载 */}
                 <ScrollView dis="content" loadCallback={this.onLoadPage.bind(this)} isend={this.state.isend}>
                     {this.renderItems()}
                 </ScrollView>

@@ -1,3 +1,12 @@
+/*  float width:25%; 布局
+    <div className="category-content clearfix">
+         <div key={index} className="category-item" onClick={}>
+            <img className="item-icon" src={} />
+            <p className="item-name">{name}</p>
+        </div>
+    
+    </div>
+*/
 .category-content {
     padding-bottom: px2rem(10px);
     .category-item {

@@ -1,0 +1,133 @@
+/*
+    <div onClick={} className="r-item-content scale-1px">
+        // 左边区域img
+        <img className="item-img" src={} />
+        // brand 
+        <div className="brand brand-pin brand-xin">品牌/新到</div> 
+        
+        // 右边内容区域
+        <div className="item-info-content">
+            <p className="item-title">{name}</p>
+            <div className="item-desc clearfix">
+                <div className="item-score">
+                    ⭐⭐ 
+                    // StarScore组件
+                    <StarScore score={}/>
+                </div>
+                <div className="item-count">
+                    月售888
+                </div>
+                <div className="item-distance">
+                    &nbsp;{1000m}
+                </div>
+                <div className="item-time">
+                    {52分钟}&nbsp;|
+                </div>
+            </div>
+            <div className="item-price">
+                <div className="item-pre-price">起送￥30</div>
+                // 美团专送
+            </div>
+            // 商家活动区内容(有的组件需要)
+            <div className="item-others">
+                <div key={index} className="other-info">
+                    <img src={} className="other-tag"/>
+                    <div className="other-content">{info}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+*/
+.r-item-content {
+    display: flex;
+    padding-top: px2rem(15px);
+    padding-bottom: px2rem(15px);
+    margin-left: px2rem(10px);
+    margin-right: px2rem(10px);
+    color: #656565;
+    &:after {
+        background-color: #e4e4e4;
+    }
+    .item-img {
+        width: px2rem(86px);
+        height: px2rem(65px);
+        border: 1px solid #e4e4e4;
+    }
+    .item-info-content {
+        flex: 1;
+        margin-left: px2rem(7px);
+        overflow: hidden;
+    }
+    .brand {
+        position: absolute;
+        left: px2rem(1px);
+        top: px2rem(16px);
+        font-size: px2rem(12px);
+        padding: px2rem(2px);
+        color: #fff;
+    }
+    .brand-pin {
+        background-color: #ffa627;
+    }
+    .brand-xin {
+        background-color: #21c56c;
+    }
+    .item-title {
+        margin-top: px2rem(3px);
+        font-size: px2rem(16px);
+        font-weight: 500;
+        color: #333;
+    }
+    .item-desc {
+        margin-top: px2rem(13px);
+        font-size: px2rem(12px);
+    }
+
+    .item-score {
+        float: left;
+    }
+    .item-count {
+        float: left;
+        margin-left: px2rem(5px);
+    }
+    .item-time {
+        float: right;
+    }
+    .item-distance {
+        float: right;
+    }
+    .item-price {
+        margin-top: px2rem(10px);
+        font-size: px2rem(12px);
+        height: px2rem(24px);
+    }
+    .item-meituan-flag {
+        float: right;
+        background-color: #ffd161;
+        color: #000;
+        padding: px2rem(3px);
+        border-radius: px2rem(3px);
+    }
+    // 商家活动区
+    .other-info {
+        color: #898989;
+        margin-top: px2rem(7px);
+        font-size: px2rem(12px);
+        display: flex;
+    }
+    .other-tag {
+        width: px2rem(14px);
+        height: px2rem(14px);
+    }
+    .other-content {
+        vertical-align: px2rem(3px);
+        margin-left: px2rem(3px);
+        height: px2rem(14px);
+        width: px2rem(230px);
+    }
+    .item-pre-price {
+        float: left;
+    }
+
+}

@@ -1,4 +1,4 @@
-// import 'component/common.scss';
+import 'component/common.scss';
 
 import React from 'react';
 
@@ -6,8 +6,8 @@ import { connect } from 'react-redux';
 
 import { Route, withRouter } from 'react-router-dom';
 // import Loadable from 'react-loadable';
-// import BottomBar from '../BottomBar/BottomBar';
-// import Home from '../Home/Home';
+import BottomBar from '../BottomBar/BottomBar';
+import Home from '../Home/Home';
 
 
 // import Loading from './Loading';
@@ -36,10 +36,11 @@ class Main extends React.Component {
 
         return (
             <div>
-                {/* <Route exact path="/home" component={Home}/>
-                <Route path="/order" component={Order}/>
-                <Route path="/my" component={My}/>
-                <BottomBar /> */}
+                <Home/>
+                {/* <Route exact path="/home" component={Home}/> */}
+                {/* <Route path="/order" component={Order}/> */}
+                {/* <Route path="/my" component={My}/> */}
+                <BottomBar />
             </div>
         );
     }

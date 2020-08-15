@@ -367,8 +367,15 @@ ReactDom.render(
 1. BottomBar组件(首页底部tab栏) page/index/BottomBar/
 
 2. Home组件(首页tab) page/index/Home/
-
-- Header组件(顶部banner)  page/index/Home/Header/
+```jsx
+		 <div>
+		    /* SearchBar组件包含在Header里面 */
+				<Header /> 
+				<Category />
+				<ContentList />
+		</div>
+```
+- Header组件(顶部banner)  **[page/index/Home/Header/]**
 ```
 - 图片img,如果依赖后台数据变化的用<img src=""/>,如果一成不变的用background
   	地址http/https简写
@@ -380,7 +387,7 @@ ReactDom.render(
         <img className="banner-img" src="//xs01.meituan.net/waimai_i/img/bannertemp.e8a6fa63.jpg"/>
     </div>
 ```
-- SearchBar组件(顶部搜索框) page/index/Home/SearchBar/
+- SearchBar组件(顶部搜索框) **[page/index/Home/SearchBar/]**
 ```
 - icon和文字横向对齐 这里通过display:inline-block;
 - 使用伪类 加icon
@@ -399,40 +406,190 @@ ReactDom.render(
   background-image: url('./img/arrowIcon.png'); 
   background-size: cover; 
 ```
-- Category组件(外卖类别) page/index/Home/Category/
+- Category组件(外卖类别) **[page/index/Home/Category/]**
+```
+- 分类item,使用float width:25%; 记得清除浮动
+  .clearfix:after {
+    content: " ";
+    visibility: hidden;
+    display: block;
+    height: 0;
+    clear: both;
+	}
+- 每个，flex布局居中
+```
+**引入redux-thunk插件**
 ```js
+// page/index/store.js文件
+import { 
+    createStore, 
+    applyMiddleware 
+} from 'redux'
+import thunk from 'redux-thunk'
+const store = createStore(
+    mainReducer, 
+    applyMiddleware(thunk)
+)
+module.exports = {
+    store
+}
+
 // - actions
-  export const getHeaderData = ()=> async () =>{
+// 引入redux-thunk
+export const getHeaderData = ()=> async (dispatch, getState) =>{
     let resp = await axios({
         method: 'get',
         url: './json/head.json',
     });
 
-    return {
+    dispatch({
         type: HEAD_DATA,
         obj: resp.data
-    }
-
-	}
+    })
+//   return {
+//         type: HEAD_DATA,
+//         obj: resp.data
+//    }
+}
 
 // - reducers
-  const getCategory = (state, action) =>{
-    return { ...state, items: action.obj.data.primary_filter};
-  }
-	const categoryReducer = (state = initState, action) => {
-			switch(action.type) {
-					case HEAD_DATA: return getCategory(state, action);
-					default: return state;
-			}
+const getCategory = (state, action) =>{
+	return { ...state, items: action.obj.data.primary_filter};
+}
+const categoryReducer = (state = initState, action) => {
+	switch(action.type) {
+			case HEAD_DATA: return getCategory(state, action);
+			default: return state;
 	}
+}
 
 // - 组件中使用
-	this.props.dispatch(getHeaderData())
-	export default connect(
-    state =>({
-        items: state.categoryReducer.items
-    })
-	)(Category);
+this.props.dispatch(getHeaderData())
+export default connect(
+state =>({
+    items: state.categoryReducer.items
+})
+)(Category)
 ```
+
+- ContentList组件(附近商家列表) **[page/index/Home/ContentList/]**
+```
+- —— 附近商家——
+  <h4 className="list-title">
+			<span className="title-line"></span>
+			<span>附近商家</span>
+			<span className="title-line"></span>
+	</h4>
+	.list-title {
+			text-align: center;
+			font-size:px2rem(16px);
+			.title-line {
+				display: inline-block;
+				border-bottom: 1px solid #949494;
+				height: px2rem(1px);
+				width: px2rem(30px);
+			}
+  }
+  
+```
+
+- ListItem组件(列表单个组件) **[src/component/ListItem/]**
+```
+- 移动端实现1px像素
+  用伪类
+- 左边固定右边自适应
+  父: display:flex;
+	左子:width:100px;  右子:flex:1;
+- 右边内容区域
+  content:上下padding,左右margin
+	里面其他地方(star count time distance)都是用float布局
+- vertical-align 可调整上下位置
+```
+```css
+/* 移动端实现1px像素 */
+/* ios8 以后 支持直接写 */
+.scale-1px {
+    position: relative;
+    border: none;
+}
+
+.scale-1px:after {
+    content: '';
+    position: absolute;
+    height: 1px;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    -webkit-transform: scaleY(0.5);
+    transform: scaleY(0.5);
+    -webkit-transform-origin: 0 0;
+    transform-origin: 0 0;
+}
+```
+- ScrollView组件(滚动加载组件) **[src/component/ScrollView/]**
+```
+- 滚动加载
+  scrollTop scrollHeight clientHeight
+	scrollTop + clientHeight >= scrollHeight
+```
+
+- Loading组件 **[src/component/Loading/]**
+
+- StarScore组件(评分star) **[src/component/StarScore/]**
+```
+- background-size 与 background-image配合用
+  background-size: cover;
+	background-image: url('./img/fullstar.png');
+  
+```
+```jsx
+/**
+ * StarScore组件
+ * @description <StarScore score={num}/> 
+ */
+
+class StarScore extends React.Component {
+    /**
+     * 渲染5颗星得分方法
+     *  @param {*} data 
+     */
+    renderScore(){
+        // Mock wm_poi_score = 4.2
+        let wm_poi_score = this.props.score || '';
+        let score = wm_poi_score.toString(); // 转字符串
+        let scoreArray = score.split('.');
+        // 满星个数
+        let fullstar = parseInt(scoreArray[0]);
+        // 半星个数
+        let halfstar = parseInt(scoreArray[1]) >= 5 ? 1 : 0;
+        // 0星个数
+        let nullstar = 5 - fullstar - halfstar;
+        let starjsx = [];
+
+        // 渲染满星jsx
+        for (let i = 0 ; i < fullstar ; i++) {
+            starjsx.push(<div key={i + 'full'} className="star fullstar"></div>)
+        }
+        // 渲染满星jsx
+        if (halfstar) {
+            for (let j = 0 ; j < halfstar ; j++) {
+                starjsx.push(<div key={j + 'half'} className="star halfstar"></div>)
+            }
+        }
+        // 渲染0星jsx
+        if (nullstar) {
+            for (let k = 0 ; k < nullstar ; k++) {
+                starjsx.push(<div key={k + 'null'} className="star nullstar"></div>)
+            }
+        }
+        return starjsx;
+    }
+    render(){
+        return <div className="star-score">{this.renderScore()}</div>;
+    }
+}
+export default StarScore;
+```
+
 
 

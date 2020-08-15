@@ -19,7 +19,7 @@ class Header extends React.Component {
         return (
             <div className="header">
                 <SearchBar />
-                <img className="banner-img" src="//xs01.meituan.net/waimai_i/img/bannertemp.e8a6fa63.jpg"/>
+                <img className="banner-img" src="http://p1.meituan.net/1440.590/codeman/d2ab674fa0e4c875865e524d82fe15a34372569.png"/>
             </div>
         );
     }

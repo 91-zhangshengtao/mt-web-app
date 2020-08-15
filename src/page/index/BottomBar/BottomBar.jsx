@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 
 import { NavLink, withRouter } from 'react-router-dom';
 
-// import { changeTab } from '../actions/tabAction';
+import { changeTab } from '../actions/tabAction';
 
 
 /**
@@ -19,12 +19,12 @@ class BottomBar extends React.Component {
         super(props)
     }
     changeTab(item){
+        // this.props.history.replace(item.key);
 
-        this.props.history.replace(item.key);
-        // // redux(dispatch)
-        // this.props.dispatch(changeTab({
-        //     activeKey: item.key
-        // }));
+        // redux(dispatch)
+        this.props.dispatch(changeTab({
+            activeKey: item.key
+        }));
     }
     renderItems(){
         // redux(reducer)
@@ -52,13 +52,19 @@ class BottomBar extends React.Component {
             let name = item.name
 
             return (
-                <NavLink 
-                    key={index} className={cls} replace={true} to={"/" + item.key} 
-                    activeClassName="active" onClick={()=>this.changeTab(item)}
+                // <NavLink 
+                //     key={index} className={cls} replace={true} to={"/" + item.key} 
+                //     activeClassName="active" onClick={()=>this.changeTab(item)}
+                // >
+                //         <div className="tab-icon"></div>
+                //         <div className="btn-name">{name}</div>
+                // </NavLink>
+                <a
+                    key={index} className={cls} onClick={()=>this.changeTab(item)}
                 >
                         <div className="tab-icon"></div>
                         <div className="btn-name">{name}</div>
-                </NavLink>
+                </a>
 
             )
         });
@@ -72,9 +78,15 @@ class BottomBar extends React.Component {
     }
 }
 
-export default withRouter(connect(
+// export default withRouter(connect(
+//     state =>({
+//         tabs: state.tabReducer.tabs,
+//         activeKey: state.tabReducer.activeKey,
+//     })
+// )(BottomBar));
+export default connect(
     state =>({
         tabs: state.tabReducer.tabs,
         activeKey: state.tabReducer.activeKey,
     })
-)(BottomBar));
+)(BottomBar)

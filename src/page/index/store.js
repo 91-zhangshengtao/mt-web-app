@@ -1,6 +1,6 @@
 import { 
     createStore, 
-    // applyMiddleware 
+    applyMiddleware 
 } from 'redux';
 
 import mainReducer from './reducers/main.js';
@@ -22,6 +22,7 @@ import { routerMiddleware } from 'react-router-redux'
 
 const store = createStore(
     mainReducer, 
+    applyMiddleware(thunk)
     // applyMiddleware(thunk,historyMiddl)
 );
 

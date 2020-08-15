@@ -7,6 +7,7 @@ const initState = {
 const getListData = (state, action) =>{
 
     if (action.currentPage === 0) {
+        // 第一页的情况
         return { ...state, list: action.obj.data.poilist};
     } else {
         let list = state.list;

@@ -1,3 +1,15 @@
+/*
+    <div className="list-content">
+        <h4 className="list-title">
+            <span className="title-line"></span>
+            <span>附近商家</span>
+            <span className="title-line"></span>
+        </h4>
+        <ScrollView dis="content" loadCallback={this.onLoadPage.bind(this)} isend={this.state.isend}>
+            <ListItem key={index} itemData={item}></ListItem>
+        </ScrollView>
+    </div>
+*/
 .list-content {
     overflow: hidden;
     padding-bottom: px2rem(50px);
