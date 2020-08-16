@@ -33,6 +33,7 @@
   react-redux@5.0.7
   react-router-dom@4.2.2
   react-router-redux@5.0.0-alpha.9
+	history@4.7.2 // router需要
   redux@3.7.2
   redux-thunk@2.2.0
 
@@ -233,7 +234,7 @@ export const LIST_DATA = 'LIST_DATA';
 export const ORDER_DATA = 'ORDER_DATA';
 ```
 - actions/tabAction.js
-
+**异步请求写法，引入react-thunk后，写法有所改变**
 ```js
 import { ADD_TODO, CHANGE_TAB } from './actionTypes.js'
 export const addTodo = (obj) => {
@@ -250,7 +251,7 @@ export const changeTab = (obj) => {
 }
 ```
 - reducers/Main.js
-
+**combineReducers**
 ```js
 import tabReducer from './tabReducer.js'
 import { combineReducers } from 'redux'
@@ -261,7 +262,6 @@ const reducers = combineReducers({
 export default reducers
 ```
 - reducers/tabReducer.js
-
 ```js
 import { CHANGE_TAB } from '../actions/actionTypes.js';
 const initState = {
@@ -296,6 +296,7 @@ const tabReducer = (state = initState, action) => {
 export default tabReducer;
 ```
 - 组件中使用 Main.jsx
+**connect**
 ```js
 import React from 'react';
 import { connect } from 'react-redux';
@@ -330,6 +331,7 @@ export default connect(
 )(Main)
 ```
 - store.js
+**createStore**
 ```js
 import { 
     createStore
@@ -365,8 +367,98 @@ ReactDom.render(
 ## 二、项目开发
 **一般来说组件内最外层div className和组件名一致**
 1. BottomBar组件(首页底部tab栏) page/index/BottomBar/
+2. react-router
+**github搜react-router-dom**
+```
+- react-router-dom(web)
+- react-router-redux
+```
+- index.js入口
+**ConnectedRouter**
+```jsx
+import React from 'react';
+import ReactDom from 'react-dom';
+import { Provider } from 'react-redux';
+import Container from './Main/Container.jsx';
+// react-router
+import { store, history } from './store.js';
+import { ConnectedRouter } from 'react-router-redux';
+ReactDom.render(
+    <Provider store={store}>
+        <ConnectedRouter history={history}>
+            <Container />
+        </ConnectedRouter>
+    </Provider>,
+    document.getElementById('root')
+)
+```
+- store.js
+**createHistory routerMiddleware**
+```jsx
+import { 
+    createStore, 
+    applyMiddleware 
+} from 'redux';
+import mainReducer from './reducers/main.js';
+import thunk from 'redux-thunk';
 
-2. Home组件(首页tab) page/index/Home/
+/* react-router */
+import createHistory from 'history/createHashHistory'
+import { routerMiddleware } from 'react-router-redux'
+
+// 创建基于hash的history
+const history = createHistory();
+// 创建初始化tab
+history.replace('home');
+// 创建history的Middleware
+const historyMiddl = routerMiddleware(history);
+const store = createStore(
+    mainReducer, 
+    applyMiddleware(thunk,historyMiddl)
+);
+```
+- reducers/Main.js 
+**routerReducer**
+```js
+import { combineReducers } from 'redux';
+import { routerReducer } from 'react-router-redux';
+const reducers = combineReducers({
+    scrollViewReducer,
+    tabReducer,
+    categoryReducer,
+    contentListReducer,
+    orderReducer,
+    router: routerReducer
+});
+```
+- 组件中使用
+```jsx
+import { Route, NavLink, withRouter } from 'react-router-dom';
+import Order from '../Order/Order'
+class Main extends React.Component {
+    constructor(props) {
+        super(props);
+
+    }
+		render(){
+			<div>
+			    {/* activeClassName设置当前路由下的类名 */}
+			    <NavLink replace={true} to={"/" + item.key} activeClassName="active">
+							<div className="tab-icon"></div>
+							<div className="btn-name">{name}</div>
+					</NavLink>
+					<Route exact path="/home" component={Home}/>
+					<Route path="/order" component={Order}/>
+			</div>
+		}
+}
+export default withRouter(connect(
+	// state =>({
+			
+	// })
+)(Main))
+```
+3. Home组件(首页tab) [page/index/Home/]
 ```jsx
 		 <div>
 		    /* SearchBar组件包含在Header里面 */
@@ -495,7 +587,7 @@ state =>({
 
 - ListItem组件(列表单个组件) **[src/component/ListItem/]**
 ```
-- 移动端实现1px像素
+- 移动端实现1px像素 直接写1px会粗点
   用伪类
 - 左边固定右边自适应
   父: display:flex;
@@ -507,6 +599,7 @@ state =>({
 ```
 ```css
 /* 移动端实现1px像素 */
+/* 直接写1px会粗点 */
 /* ios8 以后 支持直接写 */
 .scale-1px {
     position: relative;
@@ -590,6 +683,144 @@ class StarScore extends React.Component {
 }
 export default StarScore;
 ```
+3. Order组件(订单tab) [page/index/Order/]
+```
+- 异步请求
+    异步请求，没有setState()  建议在constructor里
+    异步请求，有setState()    建议在componentDidMount里
+```
+- ListItem组件(订单列表单个组件) ** [page/index/Order/ListItem/]**
+```
+- 技巧:上下li connent盒子有间距 且区分颜色 
+  border-top:10px;
+- 盒子 一般上下padding 左右margin
 
+- 圆形
+  .item-img {
+        width: px2rem(40px);
+        height: px2rem(40px);
+        margin-top: px2rem(8px);
+        margin-left: px2rem(16px);
+        border-radius: 50%;
+   }
+- 箭头 >(下面还有一种实现的方法)
+  .arrow {
+        width: px2rem(8px);
+        height: px2rem(8px);
+        border: 1px solid #999;
+        border-width:  1px 1px 0 0;
+        transform: rotate(45deg);
+        -webkit-transform: 45deg;
+    }
 
+		
 
+- 文字省略号
+  .one-line {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .two-line {
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		-webkit-box-orient: vertical;
+	}
+```
+4. My组件(我的) ** [page/index/Order/ListItem/]**
+```
+- overflow: hidden; 解决header 子元素 margin-top穿透问题
+- img 设置  display: block;
+- 垂直居中
+   	position: absolute;
+		top: 50%;
+		-webkit-transform: translateY(-50%);
+		transform: translateY(-50%);
+- 箭头 >(上面还有一种实现的方法)
+  	li:after {
+				content: '>';
+				display: block;
+				width: px2rem(16px);
+				height: px2rem(16px);
+				position: absolute;
+				top: 0;
+				right: px2rem(9px);
+				color: #aaa;
+		}
+```
+```scss
+/*
+	<ul className="items">
+			<li className="address">
+					收货地址管理
+			</li>
+			<li className="money">
+					商家代金券
+			</li>
+	</ul>
+	<ul className="items">
+			<li className="email">
+					意见反馈
+			</li>
+			<li className="question">
+					常见问题
+			</li>
+	</ul>
+*/
+ li {
+		height: px2rem(45px);
+		font-size: px2rem(14px);
+		line-height: px2rem(45px);
+		position: relative;
+		padding-left: px2rem(26px);
+		margin-left: px2rem(15px);
+		border-bottom: 1px solid #e4e4e4;
+		&:last-child {
+				border: none; // 最后一个元素
+		}
+		&:before {
+				content: '';
+				display: block;
+				width: px2rem(16px);
+				height: px2rem(16px);
+				position: absolute;
+				top: 50%;
+				left: 1px;
+				-webkit-transform: translateY(-50%);
+				transform: translateY(-50%); // 垂直居中
+				background-size: cover;
+		}
+		&:after {
+				content: '>';
+				display: block;
+				width: px2rem(16px);
+				height: px2rem(16px);
+				position: absolute;
+				top: 0;
+				right: px2rem(9px);
+				color: #aaa;
+		}
+}
+.address {
+		&:before {
+				background-image: url('./img/address.png');
+		}
+}
+.money {
+		&:before {
+				background-image: url('./img/money.png');
+		}
+}
+.email {
+		&:before {
+				background-image: url('./img/email.png');
+		}
+}
+.question {
+		&:before {
+				background-image: url('./img/question.png');
+		}
+}
+```

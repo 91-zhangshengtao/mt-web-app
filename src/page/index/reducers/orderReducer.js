@@ -5,8 +5,9 @@ const initState = {
 };
 
 const getOrderData = (state, action) =>{
-
+    
     if (action.currentPage === 0) {
+        // 第一页情况
         return { ...state, list: action.obj.data.digestlist};
     } else {
         let list = state.list;

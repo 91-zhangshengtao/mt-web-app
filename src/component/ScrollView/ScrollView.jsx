@@ -28,7 +28,7 @@ class ScrollView extends React.Component {
 
         if ((scrollTop + clientHeight) >= (scrollHeight - proLoadDis)) {
 
-
+            // 父组件传入的
             if (!this.props.isend) {
 
                 if (!this.props.readyToLoad) {

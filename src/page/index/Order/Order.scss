@@ -1,0 +1,24 @@
+/*
+    <div className="order">
+        <div className="header">订单</div>
+        <ScrollView dis="order" loadCallback={} isend={}>
+            <div className="order-list">
+                // map Order/ListItem/jsx
+                <ListItem key={index} itemData={item}></ListItem>
+            </div>
+        </ScrollView>
+    </div>
+*/
+.order {
+    .header {
+        width: 100%;
+        height: px2rem(64px);
+        background-color: #fff;
+        border-bottom: 1px solid #b2b2b2;
+        font-size: px2rem(17px);
+        color: #333;
+        text-align: center;
+        line-height: px2rem(64px);
+        font-weight: bold;
+    }
+}

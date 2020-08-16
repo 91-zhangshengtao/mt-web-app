@@ -7,11 +7,13 @@ import { connect } from 'react-redux';
 import { Route, withRouter } from 'react-router-dom';
 // import Loadable from 'react-loadable';
 import BottomBar from '../BottomBar/BottomBar';
+
 import Home from '../Home/Home';
+import Order from '../Order/Order';
+import My from '../My/My';
 
-
+/* react-router loading */
 // import Loading from './Loading';
-
 // const Order = Loadable({
 //     loader: () => import(/* webpackChunkName: "order" */'../Order/Order'),
 //     loading: Loading,
@@ -36,10 +38,12 @@ class Main extends React.Component {
 
         return (
             <div>
-                <Home/>
-                {/* <Route exact path="/home" component={Home}/> */}
-                {/* <Route path="/order" component={Order}/> */}
-                {/* <Route path="/my" component={My}/> */}
+                {/* <Home/> */}
+                {/* <Order/> */}
+                {/* <My/> */}
+                <Route exact path="/home" component={Home}/>
+                <Route path="/order" component={Order}/>
+                <Route path="/my" component={My}/>
                 <BottomBar />
             </div>
         );
@@ -47,14 +51,14 @@ class Main extends React.Component {
 }
 
 /* connect */
-// 当前组件通过 this.props.key 就可以获取
-export default connect(
-    state =>({
-        // key: state.tabReducer.num
-    })
-)(Main)
-// export default withRouter(connect(
-//     // state =>({
+// // 当前组件通过 this.props.key 就可以获取
+// export default connect(
+//     state =>({
+//         // key: state.tabReducer.num
+//     })
+// )(Main)
+export default withRouter(connect(
+    // state =>({
         
-//     // })
-// )(Main));
+    // })
+)(Main));

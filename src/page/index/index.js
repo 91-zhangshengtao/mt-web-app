@@ -12,9 +12,9 @@ import { ConnectedRouter } from 'react-router-redux';
 
 ReactDom.render(
     <Provider store={store}>
-        {/* <ConnectedRouter history={history}> */}
+        <ConnectedRouter history={history}>
             <Container />
-        {/* </ConnectedRouter> */}
+        </ConnectedRouter>
     </Provider>,
     document.getElementById('root')
 );

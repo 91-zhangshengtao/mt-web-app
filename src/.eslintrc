@@ -12,7 +12,7 @@
     },
     "rules": { // off 干掉哪些
         "react/prop-types": "off",
-        "no-console": "off",
+        // "no-console": "off",
         "no-debugger": "off",
         "no-unused-vars": "off"
     }
