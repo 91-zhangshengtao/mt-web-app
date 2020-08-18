@@ -33,9 +33,10 @@
   react-redux@5.0.7
   react-router-dom@4.2.2
   react-router-redux@5.0.0-alpha.9
-	history@4.7.2 // router需要
+  history@4.7.2 // router需要
   redux@3.7.2
   redux-thunk@2.2.0
+  redux-logger@3.0.6
 
 - 安装babel插件
   babel-core@6.26.0
@@ -44,8 +45,8 @@
   babel-preset-es2015@6.24.1
   babel-preset-react@6.24.1
   babel-preset-stage-0@6.24.1
-  babel-plugin-transform-async-to-generator@6.24.1
-  babel-plugin-transform-runtime@6.23.0
+  babel-plugin-transform-async-to-generator@6.24.1 // async-await
+  babel-plugin-transform-runtime@6.23.0 // async-await
 
 - 其他loader
   css-loader@0.28.11
@@ -215,8 +216,25 @@ if (module.hot) {
 }
 ```
 
-
-4. redux-react的基本使用
+4. .babelrc文件
+```json
+{
+	"presets": [
+		"es2015",
+		"react",
+		"stage-0"
+	],
+	"plugins": [
+		["transform-runtime", {
+			"helpers": false,
+			"polyfill": false,
+			"regenerator": true,
+			"moduleName": "babel-runtime"
+		}]
+	]
+}
+```
+5. redux-react的基本使用
 ```
 - action
   dispatch
@@ -364,17 +382,18 @@ ReactDom.render(
 
 
 
-## 二、项目开发
+## 二、项目开发 -首页tab页面(Home、Order、My、BottomBar组件) [/page/index/]
 **一般来说组件内最外层div className和组件名一致**
-1. BottomBar组件(首页底部tab栏) page/index/BottomBar/
+1. BottomBar组件(首页底部tab栏) **[page/index/BottomBar/]**
 2. react-router
 **github搜react-router-dom**
+- 依赖插件
 ```
 - react-router-dom(web)
 - react-router-redux
+- history
 ```
-- index.js入口
-**ConnectedRouter**
+- index.js入口文件 **(ConnectedRouter)**
 ```jsx
 import React from 'react';
 import ReactDom from 'react-dom';
@@ -392,8 +411,7 @@ ReactDom.render(
     document.getElementById('root')
 )
 ```
-- store.js
-**createHistory routerMiddleware**
+- store.js **(createHistory routerMiddleware)**
 ```jsx
 import { 
     createStore, 
@@ -417,8 +435,7 @@ const store = createStore(
     applyMiddleware(thunk,historyMiddl)
 );
 ```
-- reducers/Main.js 
-**routerReducer**
+- reducers/Main.js **(routerReducer)** 
 ```js
 import { combineReducers } from 'redux';
 import { routerReducer } from 'react-router-redux';
@@ -431,7 +448,7 @@ const reducers = combineReducers({
     router: routerReducer
 });
 ```
-- 组件中使用
+- 组件中使用 **(Route, NavLink, withRouter)**
 ```jsx
 import { Route, NavLink, withRouter } from 'react-router-dom';
 import Order from '../Order/Order'
@@ -444,11 +461,11 @@ class Main extends React.Component {
 			<div>
 			    {/* activeClassName设置当前路由下的类名 */}
 			    <NavLink replace={true} to={"/" + item.key} activeClassName="active">
-							<div className="tab-icon"></div>
-							<div className="btn-name">{name}</div>
-					</NavLink>
-					<Route exact path="/home" component={Home}/>
-					<Route path="/order" component={Order}/>
+                        <div className="tab-icon"></div>
+                        <div className="btn-name">{name}</div>
+                </NavLink>
+                <Route exact path="/home" component={Home}/>
+                <Route path="/order" component={Order}/>
 			</div>
 		}
 }
@@ -683,7 +700,7 @@ class StarScore extends React.Component {
 }
 export default StarScore;
 ```
-3. Order组件(订单tab) [page/index/Order/]
+4. Order组件(订单tab) [page/index/Order/]
 ```
 - 异步请求
     异步请求，没有setState()  建议在constructor里
@@ -729,7 +746,7 @@ export default StarScore;
 		-webkit-box-orient: vertical;
 	}
 ```
-4. My组件(我的) ** [page/index/Order/ListItem/]**
+5. My组件(我的) ** [page/index/Order/ListItem/]**
 ```
 - overflow: hidden; 解决header 子元素 margin-top穿透问题
 - img 设置  display: block;
@@ -823,4 +840,122 @@ export default StarScore;
 				background-image: url('./img/question.png');
 		}
 }
+```
+## 三、项目开发 -分类页面(NavHeader、Header、组件) [/page/category/]
+- redux-logger中间件(跟踪redux状态)
+```js
+import { createStore, applyMiddleware } from 'redux';
+import thunk from 'redux-thunk';
+import logger from 'redux-logger'; // redux-logger
+import mainReducer from './reducers/main.js';
+
+const store = createStore(mainReducer, applyMiddleware(logger, thunk));
+export default store
+```
+1. NavHeader组件(导航栏) **[/component/NavHeader/]**
+```
+- 左变back箭头 中间文字居中
+  可以左absolute
+```
+2. Header组件(头部过滤) **[/page/category/Header/]**
+```
+- n个元素间用 | 等分
+    .item {
+        color: #2f2f2f;
+        border-right: 1px solid #ddd; // 边框
+        flex: 1; // flex
+        &:last-child {
+            border: none;
+        }
+    }
+
+- 伪类 下箭头
+    &.cate:after, &.type:after {
+        content: '';
+        display: inline-block; // inline-block
+        width: px2rem(5px);
+        height: px2rem(5px);
+        margin-bottom: px2rem(2px);
+        margin-left: px2rem(6px);
+        border: 1px solid #666;
+        border-width: 0 1px 1px 0;
+        transform: rotate(45deg);
+        -webkit-transform: rotate(45deg);
+        -webkit-transition: .3s;
+        transition: .3s;
+    }
+    // :not(.filter) 不包含
+    &.current:not(.filter)::after {
+        transform: rotate(225deg);
+        -webkit-transform: rotate(225deg);
+    }
+
+- 伪类加图标
+    &.filter:after {
+        content: '';
+        display: inline-block;
+        width: px2rem(12px);
+        height: px2rem(12px);
+        transform: rotate(0);
+        background-image: url('./img/filter.png');
+        background-size: cover;
+    }
+
+- 伪类 实现倒三角
+    &:before {
+        display: none; // none
+        content: '';
+        position: absolute; // 定位
+        top: px2rem(23px);
+        left: 49%;
+        width: px2rem(7px);
+        height: px2rem(7px);
+        background-color: #fff;
+        border: 1px solid #e4e4e4;
+        border-width: 0 1px 1px 0;
+        transform: rotate(225deg);
+        -webkit-transform: rotate(225deg);
+    }
+    &.current:before {
+        display: block; // block
+    }
+
+- 盒子带文字 有边框 三等分(不用flex)
+    // map
+    <div key={index} className="cate-box"  onClick={} >
+        <div className="cate-box-inner active">
+            奶茶果汁 (166)
+        </div>
+    </div>
+        .cate-box {
+            float: left; // float
+            width: 33.33%;
+            padding: px2rem(10px); // padding
+            box-sizing: border-box;
+        }
+        // 这里设置边框
+        .cate-box-inner {
+            border: 1px solid #c4c4c4;
+            text-align: center;
+            height: px2rem(37px);
+            line-height: px2rem(37px);
+            position: relative;
+            &.active {
+            }
+        }
+- 遮罩层
+    // panel(bottom) ---遮罩层
+    .panel {
+        position: absolute;
+        z-index: 1;
+        left: 0;
+        top: px2rem(105px);
+        bottom: 0;
+        right: 0;
+        background-color: rgba(0,0,0,0.7); 
+        display: none; // none
+        &.show {
+            display: block; // block
+        }
+    }
 ```
