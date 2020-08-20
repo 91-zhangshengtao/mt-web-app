@@ -18,7 +18,7 @@ class Header extends React.Component {
         this.props.dispatch(getFilterData());
     }
     /**
-     * 充值其他item的active状态
+     * 重置其他item的active状态
      */
     revertActive(key, dataList){
         if (key === TABKEY.cate) {

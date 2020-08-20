@@ -7,9 +7,9 @@
             </div>
 
         </div>
-        // panel
+        // panel 遮罩层
         <div className="panel show">
-            // scroll
+            // scroll-wrapper 遮罩层 inner
             <div className="panel-inner">
                 // content
                 <ul key={item.key} className="cate/type/filter-panel current">
@@ -132,7 +132,7 @@
     }
     // panel(bottom) ---遮罩层
     .panel {
-        position: absolute;
+        position: fixed;
         z-index: 1;
         left: 0;
         top: px2rem(105px);
@@ -143,7 +143,7 @@
         &.show {
             display: block; // block
         }
-        // scroll-wrapper
+        // scroll-wrapper  遮罩层内容
         .panel-inner {
             height: px2rem(300px);
             overflow-x: hidden;

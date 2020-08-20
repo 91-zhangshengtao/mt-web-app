@@ -615,7 +615,7 @@ state =>({
 - vertical-align 可调整上下位置
 ```
 ```css
-/* 移动端实现1px像素 */
+/* 移动端实现0.5px像素 */
 /* 直接写1px会粗点 */
 /* ios8 以后 支持直接写 */
 .scale-1px {
@@ -841,7 +841,7 @@ export default StarScore;
 		}
 }
 ```
-## 三、项目开发 -分类页面(NavHeader、Header、组件) [/page/category/]
+## 三、项目开发 -分类页面(NavHeader、Header、ContentList组件) [/page/category/]
 - redux-logger中间件(跟踪redux状态)
 ```js
 import { createStore, applyMiddleware } from 'redux';
@@ -920,29 +920,6 @@ export default store
         display: block; // block
     }
 
-- 盒子带文字 有边框 三等分(不用flex)
-    // map
-    <div key={index} className="cate-box"  onClick={} >
-        <div className="cate-box-inner active">
-            奶茶果汁 (166)
-        </div>
-    </div>
-        .cate-box {
-            float: left; // float
-            width: 33.33%;
-            padding: px2rem(10px); // padding
-            box-sizing: border-box;
-        }
-        // 这里设置边框
-        .cate-box-inner {
-            border: 1px solid #c4c4c4;
-            text-align: center;
-            height: px2rem(37px);
-            line-height: px2rem(37px);
-            position: relative;
-            &.active {
-            }
-        }
 - 遮罩层
     // panel(bottom) ---遮罩层
     .panel {
@@ -957,5 +934,56 @@ export default store
         &.show {
             display: block; // block
         }
+    }
+
+- 盒子带文字 有边框 三等分(不用flex)
+    // map
+    <div key={index} className="cate-box"  onClick={} >
+        <div className="cate-box-inner active">
+            奶茶果汁 (166)
+        </div>
+    </div>
+        .cate-box {
+            float: left; // float
+            width: 33.33%;
+            padding: px2rem(10px); // padding
+            box-sizing: border-box;
+        }
+        // 这里设置边框(宽度有父padding控制)
+        .cate-box-inner {
+            border: 1px solid #c4c4c4;
+            text-align: center;
+            height: px2rem(37px);
+            line-height: px2rem(37px);
+            position: relative;
+            &.active {
+            }
+        }
+
+- img设置 block+absolute,可方便布局
+```
+2. ContentList组件(附近商家列表)  **[/page/category/ContentList/]**
+
+## 四、项目开发 -评论页面  [/page/evaluation/]
+```
+- star
+    对齐 inline-block
+    
+- 监听输入法事件(compositionstart compositionend)
+    <textarea 
+        ref={(ref)=>{this.commentInput = ref}} 
+        onChange={(e)=>this.onIuput(e.target.value)} 
+        minLength="140" placeholder="" 
+        className="comment-input">
+    </textarea>
+
+    componentDidMount(){
+        this.commentInput.addEventListener('compositionstart', ()=>{
+            this.chineseInputing = true;
+        });
+        this.commentInput.addEventListener('compositionend', (e)=>{
+            this.chineseInputing = false;
+            this.onIuput(e.target.value);
+        });
     }
 ```

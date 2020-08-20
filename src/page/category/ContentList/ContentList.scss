@@ -1,3 +1,9 @@
+/*
+    <ScrollView loadCallback={this.onLoadPage.bind(this)} isend={this.props.isend}>
+        // map component
+        <ListItem key={index} itemData={item}></ListItem>
+    </ScrollView>
+*/
 .list-content {
     padding-bottom: px2rem(50px);
     padding-top: px2rem(45px);

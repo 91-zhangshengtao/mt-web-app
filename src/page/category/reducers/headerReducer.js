@@ -39,7 +39,7 @@ const getFilterData = (state, action) => {
 }
 // 改变过滤条件
 const changeFilter = (state, action) => {
-    let _tabs = JSON.parse(JSON.stringify(state.tabs));
+    let _tabs = JSON.parse(JSON.stringify(state.tabs)); // 深拷贝(适合简单key value)
     _tabs[action.obj.key] = {
         key: action.obj.key,
         text: action.obj.item.name,

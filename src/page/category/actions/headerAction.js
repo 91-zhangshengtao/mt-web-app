@@ -25,7 +25,7 @@ export const changeFilter = (obj)=> (dispatch) =>{
         type: CHANGE_FILTER,
         obj: obj
     })
-
+    // 关闭遮罩层
     dispatch({
         type: CHANGE_TAB,
         obj: {

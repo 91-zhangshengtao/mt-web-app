@@ -19,7 +19,9 @@ import { getListData } from '../actions/contentListAction';
 class ContentList extends React.Component {
     constructor(props) {
         super(props);
-
+        this.state={
+            scrollTop: 109
+        }
         // 请求第一屏数据
         this.fetchData();
 
@@ -43,12 +45,11 @@ class ContentList extends React.Component {
             return <ListItem key={index} itemData={item}></ListItem>
         });
     }
-
     render(){
         return (
             <div className="list-content">
                 <ScrollView loadCallback={this.onLoadPage.bind(this)} isend={this.props.isend}>
-                    {this.renderItems()}
+                        {this.renderItems()}
                 </ScrollView>
             </div>
         );
