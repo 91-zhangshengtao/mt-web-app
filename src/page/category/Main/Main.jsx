@@ -19,9 +19,9 @@ class Main extends React.Component {
 
         return (
             <div className="category">
-                <NavHeader title="分类"/>
-                <Header />
-                <ContentList />
+                <NavHeader title="分类"/> {/* fixed   40*/} 
+                <Header /> {/* header为了占位置 header-top/panel fixed  64 */}
+                <ContentList /> {/* 45 + 15 */}
             </div>
         );
     }

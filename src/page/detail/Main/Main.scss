@@ -1,0 +1,58 @@
+/*
+    <div className="detail">
+        <NavHeader title={poiName}/>
+        <div className="tab-bar">
+            // map
+            <NavLink  key={item.key} className="tab-item"
+                activeClassName="active" onClick={} 
+                replace={true} to={'/' + item.key} 
+             >点菜/评价/商家</NavLink>
+        </div>
+
+        <Route exact path="/menu" component={Menu}/>
+        <Route path="/comment" component={Comment}/>
+        <Route path="/restanurant" component={Restanurant}/>
+        {this.props.showChooseContent ? <div className="mask"></div> : null}
+    </div>
+*/
+.detail {
+    .mask {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        top: 0;
+        background-color: rgba(0,0,0,0.7);
+    }
+    // tab
+    .tab-bar {
+        font-size: px2rem(16px);
+        display: flex;
+        border-bottom: 1px solid #f0f0f0;
+        margin-top: px2rem(64px); // navHeader fixed  64
+        .tab-item {
+            flex: 1; // flex:1
+            height: px2rem(45px);
+            line-height: px2rem(45px);
+            position: relative;
+            color: #666;
+            text-align: center;
+            text-decoration: none; // 去掉a 下划线
+            &.active {
+                &:after {
+                    content: '';
+                    display: block;
+                    height: 4px;
+                    width: 60px;
+                    position: absolute; // 用伪类 实现active黄色横线
+                    bottom: 0;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    -webkit-transform: translateX(-50%);
+                    background-color: #ffd161;
+                }
+            }
+        }
+    }
+    
+}

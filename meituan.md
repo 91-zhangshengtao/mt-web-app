@@ -986,4 +986,78 @@ export default store
             this.onIuput(e.target.value);
         });
     }
+- 初始化滚动条
+    // 初始化滚动条(该项目滚动加载基于html body的)
+    componentDidUpdate(){
+        console.log('scroll-componentDidUpdate')
+        const top = document.documentElement.scrollTop || document.body.scrollTop; // 滚动条的位置
+        console.log('top:',top)
+        if(document.documentElement.scrollTop){
+            document.documentElement.scrollTop = 0
+        }{
+            document.body.scrollTop = 0
+        }
+    }
 ```
+
+## 五、项目开发 -店铺详情页面  [/page/detail/]
+1. NavHeader(导航栏) **[/component/NavHeader/]**
+2. tab组件(头部tab) **[/page/detail/Main.Main.jsx]**
+- tab(用伪类 实现active黄色横线)
+```scss
+// tab
+.tab-bar {
+    font-size: px2rem(16px);
+    display: flex;
+    border-bottom: 1px solid #f0f0f0;
+    margin-top: px2rem(64px); // navHeader fixed  64
+    .tab-item {
+        flex: 1; // flex:1
+        height: px2rem(45px);
+        line-height: px2rem(45px);
+        position: relative;
+        color: #666;
+        text-align: center;
+        text-decoration: none;
+        &.active {
+            &:after {
+                content: '';
+                display: block;
+                height: 4px;
+                width: 60px;
+                position: absolute; // 用伪类 实现active黄色横线
+                bottom: 0;
+                left: 50%;
+                transform: translateX(-50%);
+                -webkit-transform: translateX(-50%);
+                background-color: #ffd161;
+            }
+        }
+    }
+}
+```
+2. Menu组件(点菜tab页面) **[/page/detail/Menu]**
+```
+- n行加省略号
+    .one-line {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .two-line {
+        display: -webkit-box;
+        -webkit-line-clamp: 2; // 超过n行
+        overflow: hidden; 
+        text-overflow: ellipsis;
+        -webkit-box-orient: vertical;
+    }
+-  background-size  image
+    .plus {
+        width: px2rem(25px);
+        height: px2rem(25px);
+        background-size: 100% 100%; // size
+        background-image: url('./img/plus.png');
+    }
+```
+3. Comment组件(评价tab) **[/page/detail/Comment]**
+4. Restanurant组件(商家tab) **[/page/detail/Restanurant]**

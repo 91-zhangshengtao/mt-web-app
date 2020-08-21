@@ -1,0 +1,92 @@
+/*
+    <div className="menu-item">
+        <img className="img" src={}/>
+
+        <div className="menu-item-right">
+            <p className="item-title">{煎蛋}</p>
+            <p className="item-desc two-line">{description}</p>
+            <p className="item-zan">{赞6}</p>
+            <p className="item-price">
+                ¥{1}
+                <span className="unit">/{个}</span>
+            </p>
+        </div>
+        // - 2 +
+        <div className="select-content">
+            <div onClick={} className="minus"></div>
+            <div className="count">{Count}</div>
+            <div onClick={} className="plus"></div>
+        </div>
+    </div>
+*/
+.menu-item {
+    display: flex; // flex布局
+    padding-top: px2rem(25px);
+    padding-bottom: px2rem(25px);
+    border-bottom: 1px solid #f0f0f0;
+    position: relative;
+    /* left */
+    .img {
+        width: px2rem(62px);
+        height: px2rem(62px);
+        margin-right: px2rem(10px);
+    }
+    /* right */
+    .menu-item-right {
+        flex: 1; // 右边flex：1 自适应
+    }
+    // .menu-item-right >  ...
+    .item-title {
+        font-size: px2rem(16px);
+        color: #2f2f2f;
+    }
+    .item-desc,.item-zan {
+        color: #a9a9a9;
+        font-size: px2rem(12px);
+        margin-top: px2rem(6px);
+        line-height: px2rem(14px);
+        padding-right: px2rem(4px);
+        &.item-desc {
+            line-height: px2rem(17px);
+        }
+    }
+    .item-price {
+        margin-top: px2rem(10px);
+        color: #fe4d3d;
+        font-size: px2rem(18px);
+    }
+    .unit {
+        color:#a9a9a9;
+        font-size: px2rem(12px);
+    }
+    /*  - 2 + */
+    .select-content {
+        position: absolute; // absolute定位
+        right: px2rem(9px);
+        bottom: px2rem(21px);
+        display: flex; // flex布局
+    }
+    // .select-content >  .plus   .minus   .count
+    .plus {
+        width: px2rem(25px);
+        height: px2rem(25px);
+        background-size: 100% 100%;
+        background-image: url('./img/plus.png');
+    }
+    .minus {
+        width: px2rem(25px);
+        height: px2rem(25px);
+        background-size: 100% 100%;
+        background-image: url('./img/minus.png');
+    }
+    .count {
+        font-size: px2rem(15px);
+        color: #2f2f2f;
+        width: px2rem(20px);
+        height: px2rem(25px);
+        line-height: px2rem(25px);
+        margin-left: px2rem(2px);
+        margin-right: px2rem(2px);
+        text-align: center;
+    }
+}

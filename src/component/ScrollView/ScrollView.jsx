@@ -48,6 +48,17 @@ class ScrollView extends React.Component {
         
         window.removeEventListener('scroll', this._onLoadPage);
     }
+    // 初始化滚动条(该项目滚动加载基于html body的)
+    componentDidUpdate(){
+        console.log('scroll-componentDidUpdate')
+        const top = document.documentElement.scrollTop || document.body.scrollTop; // 滚动条的位置
+        console.log('top:',top)
+        if(document.documentElement.scrollTop){
+            document.documentElement.scrollTop = 0
+        }{
+            document.body.scrollTop = 0
+        }
+    }
     render(){
         return (
             <div className="scrollview">
