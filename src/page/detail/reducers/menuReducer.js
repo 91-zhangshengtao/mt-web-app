@@ -1,45 +1,57 @@
 import { GET_LIST_DATA, LEFT_CLICK,ADD_SELECTI_ITEM,MINUS_SELECTI_ITEM,SHOW_CHOOSE_CONTENT,CLEAR_CAR } from '../actions/actionTypes';
 
 const initState = {
-    listData: {food_spu_tags:[]},
+    listData: {food_spu_tags:[]}, // all list
     currentLeftIndex: 0,
-    showChooseContent: false,
+    showChooseContent: false, // 是否展示购物车list
     poiInfo: {}
 };
 
-// left 点击菜单，切换right list
+// left 点击菜单，获取rightList 对应index
 const itemClick = (state, action) =>{
     return {...state, currentLeftIndex: action.obj.currentLeftIndex}
 }
-// list数据
+//all list数据
 const getListData = (state, action) =>{
     if (state.listData.food_spu_tags.length > 0) {
         return {...state};
     }
     return {...state, poiInfo:action.obj.data, listData: action.obj.data || {food_spu_tags:[]}}
 }
-
+// right item +
 const addSelectItem = (state, action) =>{
-
     return {...state, listData: dealWithSelectItem(state, action, ADD_SELECTI_ITEM)};
 }
+// right item -
 const minusSelectItem = (state, action) =>{
     return {...state, listData: dealWithSelectItem(state, action, MINUS_SELECTI_ITEM)};
-
 }
+// 展示购物车 list
 const chooseContent = (state, action) =>{
     return {...state, showChooseContent: action.obj.flag };
 
 }
 const dealWithSelectItem = (state, action, type) =>{
     let listData = state.listData;
-    // 找到外层，左边list列表
+    console.log('listData：',listData);
+    
+    // 左边list列表
     let list = listData.food_spu_tags || [];
 
-    // 通过列表找到左边item使用的数据也就是点击的item数据
-    let currentItem = list[action.outIndex || state.currentLeftIndex];
+    // 当前需要更新的 右边list item列表(chooseCount)
+    //  --outIndex 关联购物车里的 对应leftList index)
+    //  --index关联购物车里的 对应leftList index
+    console.log('action:',action);
+    // console.log('action.index:',action.index);
+    let index = state.currentLeftIndex
+    console.log('1',action.obj.outIndex);
+    
+    if(action.obj.outIndex || (action.obj.outIndex === 0)){
+        index = action.obj.outIndex
+    }
+    let currentItem = list[index];
 
-    // 对当前点击这个item的chooseCount加一或减一
+    // 对right 当前item的chooseCount加一或减一
     if (type === ADD_SELECTI_ITEM) {
         currentItem.spus[action.obj.index].chooseCount ++;
     } else {
@@ -50,9 +62,8 @@ const dealWithSelectItem = (state, action, type) =>{
 
     return _listData;
 }
-
+// 清空购物车(chooseCount = 0)
 const clearCar = (state) =>{
-
     let listData = state.listData;
     // 找到外层，左边list列表
     let list = listData.food_spu_tags || [];
@@ -65,7 +76,6 @@ const clearCar = (state) =>{
         }
     }
     return {...state, listData: JSON.parse(JSON.stringify(listData)) };
-
 }
  
 

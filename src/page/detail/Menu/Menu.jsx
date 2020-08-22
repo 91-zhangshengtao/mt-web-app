@@ -30,7 +30,7 @@ class Menu extends React.Component {
     }
     /**
      * 点击切换右边数据
-     * left 点击菜单，切换right list
+     * left 点击菜单，获取rightList 对应index
      */
     itemClick(index){
         this.props.dispatch(itemClick({

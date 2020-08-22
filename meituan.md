@@ -1036,7 +1036,7 @@ export default store
     }
 }
 ```
-2. Menu组件(点菜tab页面) **[/page/detail/Menu]**
+2. Menu组件(点菜tab页面) 【MenuItem组件、shopBar组件】 **[/page/detail/Menu]**
 ```
 - n行加省略号
     .one-line {
@@ -1051,7 +1051,7 @@ export default store
         text-overflow: ellipsis;
         -webkit-box-orient: vertical;
     }
--  background-size  image
+-  background-size  image   100% 100%;
     .plus {
         width: px2rem(25px);
         height: px2rem(25px);
@@ -1059,5 +1059,62 @@ export default store
         background-image: url('./img/plus.png');
     }
 ```
+- **chrome dev-tools插件(React Developer Tools、 Redux DevTools)**
+**Redux DevTools需要配置**
+```js
+/* store.js */
+// 创建history的Middleware
+const historyMiddl = routerMiddleware(history)
+const store = createStore(mainReducer,
+     // window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
+    applyMiddleware(
+        thunk,
+        historyMiddl
+    )
+)
+```
+- ShopBar组件(购物车) **[/page/detail/Menu/ShopBar/]**
+```
+- 把页面展示的内容都放在一个list里
+  -/+ 及清空 数量，都改变list里的值，每次用替换的方式更新
+- 获取购物车total
+    render(){
+        let data = this.getTotalPrice()
+        return (
+            <div></div>
+        )
+    }
+
+    // 类似计算属性
+    getTotalPrice(){
+        let listData = this.props.listData.food_spu_tags || [];
+        let totalPrice = 0;
+        let dotNum = 0; // 购物车图标上的数字
+        let chooseList = [];
+        // 遍历
+        for (let i = 0 ; i< listData.length ; i++) { // 总list
+            let spus = listData[i].spus || [];
+            for (let j = 0 ; j < spus.length ; j++) { // 对应left菜单的 rightList
+                let chooseCount = spus[j].chooseCount;
+                if (chooseCount > 0) {
+                    dotNum += chooseCount; // 购物车total
+                    spus[j]._index = j; // _index 关联 rightList item index索引
+                    spus[j]._outIndex = i; // _outIndex 关联购物车里的 对应leftList index
+                    chooseList.push(spus[j]); // 动态变化的购物车list
+                    totalPrice += spus[j].min_price * chooseCount; // 计算属性
+                }
+            }
+        }
+        return {
+            dotNum,
+            totalPrice,
+            chooseList
+        }
+    }
+- 遍历(上述例子有 for.Each也行)
+  
+```
+
 3. Comment组件(评价tab) **[/page/detail/Comment]**
+
 4. Restanurant组件(商家tab) **[/page/detail/Restanurant]**

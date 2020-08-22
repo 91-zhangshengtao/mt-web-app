@@ -2,14 +2,14 @@ import { GET_LIST_DATA, LEFT_CLICK,ADD_SELECTI_ITEM,MINUS_SELECTI_ITEM,SHOW_CHOO
 import axios from 'axios';
 import qs from 'component/queryString';
 
-// left 点击菜单，切换right list
+// left 点击菜单，获取rightList 对应index
 export const itemClick = (obj) =>{
     return {
         type: LEFT_CLICK,
         obj: obj
     }
 }
-// list数据
+// all list数据
 export const getListData = () =>async(dispatch)=>{
     let id = qs('id');
     window.Rohr_Opt.Flag = 100011;
@@ -36,26 +36,28 @@ export const getListData = () =>async(dispatch)=>{
         obj: resp.data
     });
 }
-
+// +
 export const addSelectItem = (obj) =>{
     return {
         type: ADD_SELECTI_ITEM,
         obj: obj
     }
 }
+// -
 export const minusSelectItem = (obj) =>{
     return {
         type: MINUS_SELECTI_ITEM,
         obj: obj
     }
 }
-
+// 展示购物车 list
 export const showChoose = (obj) =>{
     return {
         type: SHOW_CHOOSE_CONTENT,
         obj: obj
     }
 }
+// 清空购物车
 export const clearCar = (obj) =>{
     return {
         type: CLEAR_CAR,

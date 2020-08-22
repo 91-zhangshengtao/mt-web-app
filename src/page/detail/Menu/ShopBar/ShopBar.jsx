@@ -10,26 +10,26 @@ class ShopBar extends React.Component {
     /**
      * 获取总价
      */
+    // 类似计算属性
     getTotalPrice(){
         let listData = this.props.listData.food_spu_tags || [];
         let totalPrice = 0;
-        let dotNum = 0;
+        let dotNum = 0; // 购物车图标上的数字
         let chooseList = [];
 
-        for (let i = 0 ; i< listData.length ; i++) {
+        for (let i = 0 ; i< listData.length ; i++) { // 总list
             let spus = listData[i].spus || [];
-            for (let j = 0 ; j < spus.length ; j++) {
+            for (let j = 0 ; j < spus.length ; j++) { // 对应left菜单的 rightList
                 let chooseCount = spus[j].chooseCount;
                 if (chooseCount > 0) {
-                    dotNum += chooseCount;
-                    spus[j]._index = j;
-                    spus[j]._outIndex = i;
-                    chooseList.push(spus[j]);
-                    totalPrice += spus[j].min_price * chooseCount;
+                    dotNum += chooseCount; // 购物车total
+                    spus[j]._index = j; // _index 关联 rightList item index索引
+                    spus[j]._outIndex = i; // _outIndex 关联购物车里的 对应leftList index
+                    chooseList.push(spus[j]); // 动态变化的购物车list
+                    totalPrice += spus[j].min_price * chooseCount; // 计算属性
                 }
             }
         }
-
         return {
             dotNum,
             totalPrice,
@@ -40,9 +40,11 @@ class ShopBar extends React.Component {
      * 添加菜品数量
      */
     addSelectItem(item){
+        console.log('item._index,item._outIndex：',item._index,item._outIndex);
+        
         this.props.dispatch(addSelectItem({
-            index: item._index,
-            outIndex: item._outIndex
+            index: item._index, // 关联 rightList item index索引
+            outIndex: item._outIndex // 关联购物车里的 对应leftList index
         }));
     }
     /**
@@ -54,6 +56,7 @@ class ShopBar extends React.Component {
             outIndex: item._outIndex
         }));
     }
+    // 购物车 里选择的list
     renderChooseItem(data){
         let array = data.chooseList || [];
         return array.map((item, index)=>{
@@ -66,6 +69,7 @@ class ShopBar extends React.Component {
                         <div className="count">{item.chooseCount}</div>
                         <div onClick={()=>this.addSelectItem(item)} className="plus"></div>
                     </div>
+                    <span>{item._outIndex}-{item._index}</span>
                 </div>
             )
         })
@@ -79,7 +83,7 @@ class ShopBar extends React.Component {
             flag: !flag
         }));
     }/**
-     *  晴空购物车
+     *  清空购物车(chooseCount = 0)
      */
     clearCar(){
         this.props.dispatch(clearCar());

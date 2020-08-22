@@ -14,9 +14,15 @@ const history = createHistory();
 history.replace('menu');// 创建初始化menu tab
 
 // 创建history的Middleware
-const historyMiddl = routerMiddleware(history);//, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
+const historyMiddl = routerMiddleware(history);
 
-const store = createStore(mainReducer,applyMiddleware(thunk,historyMiddl));
+const store = createStore(mainReducer,
+    // window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
+   applyMiddleware(
+       thunk,
+       historyMiddl
+   )
+)
 
 
 if (module.hot) {
