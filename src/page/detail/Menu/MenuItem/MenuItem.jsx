@@ -30,7 +30,7 @@ class MenuItem extends React.Component {
         let item = this.props.data;
         return (
             <div className="menu-item">
-                <img className="img" src={item.picture}/>
+                <img className="img" src={item.picture || 'http://p1.meituan.net/1440.590/codeman/d2ab674fa0e4c875865e524d82fe15a34372569.png'}/>
                 <div className="menu-item-right">
                     <p className="item-title">{item.name}</p>
                     <p className="item-desc two-line">{item.description}</p>

@@ -1,37 +1,75 @@
+/*
+    <div className="comment-inner">
+        <div className="comment-score">
+            <div className="mail-score-content">
+                <div className="mail-score">5.8</div>
+                <div className="mail-text">商家评价</div>
+            </div>
+            <div className="other-score-content">
+                <div className="taste-score">
+                    <div className="taste-text">口味</div>
+                    <div className="taste-star-wrap">
+                        // star 
+                        <StarScore score={5.8}/>
+                    </div>
+                    <div className="taste-score-text">5.8</div>
+                </div>
+                <div className="package-score">
+                    <div className="package-text">包装</div>
+                    <div className="package-star-wrap">
+                        // star
+                        <StarScore score={5.0}/>
+                    </div>
+                    <div className="package-score-text">5.0</div>
+                </div>
+            </div>
+            <div className="send-score-content">
+                <div className="send-score">5.3</div>
+                <div className="send-text">商家评价</div>
+            </div>
+        </div>
+        // list
+        <CommentList />
+    </div>
+*/
 .comment-score {
-    display: flex;
+    display: flex; // flex布局
     padding-left: px2rem(25px);
     padding-right: px2rem(25px);
     padding-top: px2rem(15px);
     padding-bottom: px2rem(15px);
     border-top: px2rem(10px) solid #f6f6f6;
     border-bottom: 1px solid #d5d5d5;
+    /* left */
     .mail-score-content {
         display: flex;
         flex-direction: column;
+        .mail-score {
+            font-size: px2rem(32px);
+            color: #ffb000;
+            margin-bottom: px2rem(5px);
+        }
+        .mail-text {
+            font-size: px2rem(12px);
+            color: #656565;
+        }
     }
+    /* middle */
+    // .other-score-content  > .taste-score .package-score 
     .other-score-content {
         display: flex;
         flex-direction: column;
-        flex: 1;
-        justify-content: space-around;
+        flex: 1; // flex:1 自适应
+        justify-content: space-around; // 等分居中
     }
-    .taste-star-wrap, .package-star-wrap {
-        margin-left: px2rem(15px);
-        margin-right: px2rem(15px);
-    }
-    .package-score, .taste-score {
+    .package-score, .taste-score { // 包装 口味
         display: flex;
         justify-content: center;
     }
-    .mail-score {
-        font-size: px2rem(32px);
-        color: #ffb000;
-        margin-bottom: px2rem(5px);
-    }
-    .mail-text {
-        font-size: px2rem(12px);
-        color: #656565;
+    // .... > .taste-text .taste-star-wrap taste-score-text
+    .taste-star-wrap, .package-star-wrap {
+        margin-left: px2rem(15px);
+        margin-right: px2rem(15px);
     }
     .taste-text,.package-text {
         font-size: px2rem(12px);
@@ -41,19 +79,21 @@
         font-size: px2rem(15px);
         color: #ffb000;
     }
-    .send-score-content {
-        display: flex;
+    /* right */
+    // .send-score-content > ....
+    .send-score-content { // 配送
+        display: flex; // flex布局
         flex-direction: column;
         margin-top: px2rem(3px);
-    }
-    .send-score {
-        font-size: px2rem(24px);
-        color: #999;
-        margin-bottom: px2rem(5px);
-        text-align: center;
-    }
-    .send-text {
-        font-size: px2rem(12px);
-        color: #999;
+        .send-score {
+            font-size: px2rem(24px);
+            color: #999;
+            margin-bottom: px2rem(5px);
+            text-align: center;
+        }
+        .send-text {
+            font-size: px2rem(12px);
+            color: #999;
+        }
     }
 }

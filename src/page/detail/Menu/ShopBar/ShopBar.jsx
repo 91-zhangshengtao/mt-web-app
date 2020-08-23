@@ -10,7 +10,8 @@ class ShopBar extends React.Component {
     /**
      * 获取总价
      */
-    // 类似计算属性
+    // 类似计算属性 --返回 {dotNum,totalPrice,chooseList} 
+    // 同时原引用对象中添加_outIndex，_index两个属性
     getTotalPrice(){
         let listData = this.props.listData.food_spu_tags || [];
         let totalPrice = 0;
@@ -94,6 +95,7 @@ class ShopBar extends React.Component {
     render(){
         let shipping_fee = this.props.listData.poi_info ? this.props.listData.poi_info.shipping_fee : 0;
         let data = this.getTotalPrice();
+        // let { dotNum, totalPrice, chooseList } = data
         return (
             <div className="shop-bar">
                 {this.props.showChooseContent ? 

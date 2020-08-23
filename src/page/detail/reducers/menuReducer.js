@@ -13,6 +13,7 @@ const itemClick = (state, action) =>{
 }
 //all list数据
 const getListData = (state, action) =>{
+    // 取缓存
     if (state.listData.food_spu_tags.length > 0) {
         return {...state};
     }

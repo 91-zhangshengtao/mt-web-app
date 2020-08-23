@@ -15,6 +15,9 @@
         {this.props.showChooseContent ? <div className="mask"></div> : null}
     </div>
 */
+.pt-45{
+    padding-top: px2rem(45px);
+}
 .detail {
     // 显示购物车list的时候， 遮罩层
     .mask {
@@ -27,10 +30,19 @@
     }
     // tab
     .tab-bar {
-        font-size: px2rem(16px);
-        display: flex;
-        border-bottom: 1px solid #f0f0f0;
         margin-top: px2rem(64px); // navHeader fixed  64
+        .tab-content{
+            z-index: 99;
+            position: fixed;
+            width:100%;
+            top: px2rem(64px);
+            left:0;
+            height:px2rem(45px);
+            font-size: px2rem(16px);
+            display: flex;
+            background-color: #fff;
+            border-bottom: 1px solid #f0f0f0;
+        }
         .tab-item {
             flex: 1; // flex:1
             height: px2rem(45px);

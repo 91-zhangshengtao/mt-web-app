@@ -12,7 +12,7 @@ export const itemClick = (obj) =>{
 // all list数据
 export const getListData = () =>async(dispatch)=>{
     let id = qs('id');
-    window.Rohr_Opt.Flag = 100011;
+    // window.Rohr_Opt.Flag = 100011;
     let token = window.Rohr_Opt.reload('/ajax/v8/poi/food?wm_poi_id=' + id);
     let resp = await axios({
       method: 'get',

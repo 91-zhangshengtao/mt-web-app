@@ -15,7 +15,10 @@ class Restanurant extends React.Component {
     renderPayType(types){
         let array = types || [];
         return array.map((item, index)=>{
-            return <p key={index} className="restanurant-pay-type res-section"><img className="icon" src={item.icon_url}/>{item.info}</p>
+            return <p key={index} className="restanurant-pay-type res-section">
+                        <img className="icon" src={item.icon_url}/>
+                        {item.info}
+                    </p>
         });
     }
     render(){
@@ -32,7 +35,7 @@ class Restanurant extends React.Component {
                     </div>
                 </div>
                 <div className="restanurant-basic">
-                    <p className="restanurant-send-time res-section">配送时间：{data.shipping_time}</p>
+                    <p className="restanurant-send-time res-section">配送时间：09：30-21：00</p>
                     <p className="restanurant-send-type res-section">配送服务：{data.delivery_type === 1 ? <span><span className="meituan-send">美团专送</span>提供高质量配送服务</span> : '商家配送'}</p>
                 </div>
                 <div className="restanurant-basic">

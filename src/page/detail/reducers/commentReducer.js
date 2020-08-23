@@ -2,7 +2,7 @@ import { COMMENT_LIST_DATA } from '../actions/actionTypes.js';
 
 const initState = {
     commentData: {},
-    commentList: []
+    commentList: [] // list
 };
 
 const getListData = (state, action) => {

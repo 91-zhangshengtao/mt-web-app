@@ -1,6 +1,31 @@
-.restanurant-content {
+/*
+    <div className="restanurant-content">
+        <div className="restanurant-basic">
+            <div className="restanurant-tel res-section">13687256367</div>
+            <div className="restanurant-addr res-section">
+                <div className="addr-wrap">
+                    <div className="addr-name">商家地址：</div>
+                    <div className="addr-text">xxxxx路yyyy室</div>
+                </div>
+            </div>
+        </div>
+        <div className="restanurant-basic">
+            <p className="restanurant-send-time res-section">配送时间：</p>
+            <p className="restanurant-send-type res-section">配送服务：商家配送</p>
+        </div>
+        <div className="restanurant-basic">
+            // map
+            <p key={index} className="restanurant-pay-type res-section">
+                <img className="icon" src={}/>
+                该商家支持在线支付
+            </p>
+        </div>
+    </div>
+*/
+.restanurant-content { // 上下布局
     background-color: #f6f6f6;
     overflow: hidden;
+    //  restanurant-basic(公共的) > ....
     .restanurant-basic {
         color: #2f2f2f;
         background-color: #fff;
@@ -9,27 +34,42 @@
         padding-right: px2rem(10px);
         padding-left: px2rem(15px);
     }
-    .res-section {
-        padding-top: px2rem(15px);
+    // 
+    .res-section { // 这里撑开内容
+        padding-top: px2rem(15px); 
         padding-bottom: px2rem(15px);
         border-bottom: 1px solid #f0f0f0;
         display: flex;
-        &:before {
-            display: block;
-            content: '';
+        &:before { // 伪类 写图片icon
+            display: block; // display(block)
+            content: ''; // content('')
             margin-right: px2rem(20px);
             width: px2rem(16px);
             height: px2rem(16px);
-            background-size: cover;
+            background-size: cover; 
         }
     }
     .restanurant-tel::before {
         width: px2rem(19px);
-        background-image: url('./img/tel.png');
+        background-image: url('./img/tel.png'); // 其他在公共.res-section里
     }
-    .restanurant-addr::before {
-        width: px2rem(19px);
-        background-image: url('./img/address.png');
+    .restanurant-addr{
+        &::before {
+            width: px2rem(19px);
+            background-image: url('./img/address.png');
+        }
+        // .restanurant-addr > addr-wrap
+        .addr-wrap {
+            display: flex;
+            .addr-name{
+                //
+            }
+            .addr-text {
+                flex: 1;
+                line-height: px2rem(20px);
+                margin-top: px2rem(-3px);
+            }
+        }
     }
     .restanurant-send-time::before {
         background-image: url('./img/time.png');
@@ -37,28 +77,27 @@
     .restanurant-send-type::before {
         background-image: url('./img/info.png');
     }
-    .addr-wrap {
-        display: flex;
+    //.restanurant-pay-type
+    .restanurant-pay-type{
+        &::before {
+            display: none;
+        }
+        .icon {
+            width: px2rem(17px);
+            height: px2rem(17px);
+            margin-right: px2rem(20px);
+        }
     }
-    .addr-text {
-        flex: 1;
-        line-height: px2rem(20px);
-        margin-top: px2rem(-3px);
-    }
-    .meituan-send {
-        background-color: #ffd161;
-        color: #333;
-        font-size: px2rem(10px);
-        padding: px2rem(2px);
-        border-radius: px2rem(4px);
-        margin-right: px2rem(4px);
-    }
-    .restanurant-pay-type::before {
-        display: none;
-    }
-    .icon {
-        width: px2rem(17px);
-        height: px2rem(17px);
-        margin-right: px2rem(20px);
-    }
+
+
+    // .meituan-send {
+    //     background-color: #ffd161;
+    //     color: #333;
+    //     font-size: px2rem(10px);
+    //     padding: px2rem(2px);
+    //     border-radius: px2rem(4px);
+    //     margin-right: px2rem(4px);
+    // }
+    
+    
 }

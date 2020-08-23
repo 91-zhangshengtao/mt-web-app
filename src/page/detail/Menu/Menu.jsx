@@ -36,6 +36,15 @@ class Menu extends React.Component {
         this.props.dispatch(itemClick({
             currentLeftIndex: index
         }));
+        document.querySelector('.right-content').scrollTop = 0
+        // left-bar
+        /* 只有基于html body 滚动 才能这么写 */
+        console.log('document.documentElement.scrollTop：',document.documentElement.scrollTop);
+        if(document.documentElement.scrollTop){
+            document.documentElement.scrollTop = 0
+        }{
+            document.body.scrollTop = 0
+        }
     }
     /**
      * 渲染右边的列表
@@ -73,6 +82,10 @@ class Menu extends React.Component {
                 </div>
             );
         });
+    }
+    componentDidMount(){
+        console.log('menu-componentDidMount');
+        
     }
     render(){
 

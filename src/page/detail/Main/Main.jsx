@@ -38,13 +38,17 @@ class Main extends React.Component {
         return (
             <div className="detail">
                 <NavHeader title={poiName}/> {/* fixed 64*/}
-                <div className="tab-bar">
-                    {this.renderTabs()}
+                <div className="tab-bar"> {/* 最外面盒子 margin-top: px2rem(64px); */}
+                    <div className="tab-content">
+                        {this.renderTabs()}
+                    </div>
                 </div>
-
-                <Route exact path="/menu" component={Menu}/>
-                <Route path="/comment" component={Comment}/>
-                <Route path="/restanurant" component={Restanurant}/>
+                <div className="pt-45">
+                    <Route exact path="/menu" component={Menu}/>
+                    <Route path="/comment" component={Comment}/>
+                    <Route path="/restanurant" component={Restanurant}/>
+                </div>
+                
                 {this.props.showChooseContent ? <div className="mask"></div> : null}
             </div>
         );

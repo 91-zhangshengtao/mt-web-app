@@ -35,28 +35,43 @@ class CommentItem extends React.Component {
             return item.content + '，'
         });
     }
+    // 处理时间(以秒为单位时间戳 == 2020.8.15)
     formatTime(time){
-        let date = new Date(Number(time + '000'));
-
+        // time   1529078400(以秒为单位)
+        let date = new Date(Number(time + '000')); // 以毫秒
         return date.getFullYear() + '.' + (date.getMonth() + 1) + '.' + date.getDate();
+        // 2020.8.15
     }
- 
     render(){
         let item = this.props.data;
         return (
             <div className="comment-item">
+                {/* absolute */}
                 <div className="comment-time">{this.formatTime(item.comment_time)}</div>
-                <img className="avatar" src={item.user_pic_url || 'http://xs01.meituan.net/waimai_i/img/default-avatar.c4e0230d.png'}/>
+                {/* left */}
+                <img 
+                    className="avatar" 
+                    src={item.user_pic_url || 'http://p1.meituan.net/1440.590/codeman/d2ab674fa0e4c875865e524d82fe15a34372569.png'}
+                />
+                {/* right */}
                 <div className="item-right">
                     <p className="nickname">{item.user_name}</p>
                     <div className="star-and-time">
-                        <div className="star-content"><StarScore score={item.order_comment_score}/></div>
+                        <div className="star-content">
+                            <StarScore score={item.order_comment_score}/>
+                        </div>
                         <div className="send-time">{item.ship_time + '分钟送达'}</div>
                     </div>
                     <div className="comment-text">{item.comment}</div>
                     {this.renderImgs(item)}
-                    {item.praise_food_tip ? <div className="like-info">{item.praise_food_tip}</div> : null}
-                    {item.comment_labels.length ? <div className="tag-info">{this.renderTags(item.comment_labels)}</div> : null}
+                    {item.praise_food_tip ? 
+                        <div className="like-info">{item.praise_food_tip}</div> 
+                        : null
+                    }
+                    {item.comment_labels.length ? 
+                        <div className="tag-info">{this.renderTags(item.comment_labels)}</div> 
+                        : null
+                    }
                 </div>
             </div>
         );

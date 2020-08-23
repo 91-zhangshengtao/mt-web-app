@@ -637,6 +637,7 @@ state =>({
 }
 ```
 - ScrollView组件(滚动加载组件) **[src/component/ScrollView/]**
+**(该项目滚动加载基于html body的  不用设置overflow)**
 ```
 - 滚动加载
   scrollTop scrollHeight clientHeight
@@ -890,7 +891,7 @@ export default store
         -webkit-transform: rotate(225deg);
     }
 
-- 伪类加图标
+- 伪类 加图标 background
     &.filter:after {
         content: '';
         display: inline-block;
@@ -987,7 +988,7 @@ export default store
         });
     }
 - 初始化滚动条
-    // 初始化滚动条(该项目滚动加载基于html body的)
+    // 初始化滚动条(该项目滚动加载基于html body的 不用设置overflow)
     componentDidUpdate(){
         console.log('scroll-componentDidUpdate')
         const top = document.documentElement.scrollTop || document.body.scrollTop; // 滚动条的位置
@@ -1046,7 +1047,7 @@ export default store
     }
     .two-line {
         display: -webkit-box;
-        -webkit-line-clamp: 2; // 超过n行
+        -webkit-line-clamp: 2;                    // 超过n行
         overflow: hidden; 
         text-overflow: ellipsis;
         -webkit-box-orient: vertical;
@@ -1055,7 +1056,7 @@ export default store
     .plus {
         width: px2rem(25px);
         height: px2rem(25px);
-        background-size: 100% 100%; // size
+        background-size: 100% 100%;               // size(100% 100%)
         background-image: url('./img/plus.png');
     }
 ```
@@ -1077,15 +1078,19 @@ const store = createStore(mainReducer,
 ```
 - 把页面展示的内容都放在一个list里
   -/+ 及清空 数量，都改变list里的值，每次用替换的方式更新
-- 获取购物车total
+  let _listData = JSON.parse(JSON.stringify(listData));
+
+- 获取购物车信息
     render(){
         let data = this.getTotalPrice()
+        // let { dotNum, totalPrice, chooseList } = data
         return (
             <div></div>
         )
     }
 
-    // 类似计算属性
+    // 类似计算属性 --返回 {dotNum,totalPrice,chooseList} 
+    // 同时原引用对象中添加_outIndex，_index两个属性
     getTotalPrice(){
         let listData = this.props.listData.food_spu_tags || [];
         let totalPrice = 0;
@@ -1114,7 +1119,77 @@ const store = createStore(mainReducer,
 - 遍历(上述例子有 for.Each也行)
   
 ```
-
 3. Comment组件(评价tab) **[/page/detail/Comment]**
+```
+- flex：1;自适应
+    左右 没写with(靠内容撑起) ，middle flex:1; 也可以实现
+    .left,right { display: flex;flex-direction: column; }
+    .middle{ flex:1; }
+
+- map中写逻辑(动态添加style属性 background)
+    {imgs.map((item, index)=>{
+        let src = item.url;
+        let style = {
+            backgroundImage: 'url(' + src + ')'
+        }
+        return <div key={index} className={'img-item'} style={style}></div>
+    })}
+
+- 处理时间(以秒为单位时间戳 == 2020.8.15)
+    formatTime(time){
+        // time   1529078400(以秒为单位)
+        let date = new Date(Number(time + '000')); // 以毫秒
+
+        return date.getFullYear() + '.' + (date.getMonth() + 1) + '.' + date.getDate();
+        // 2020.8.15
+    }
+- 不使用伪类 加图片icon  background
+    .like-info {
+        margin-top: px2rem(4px);
+        color: #576b95;
+        font-size: px2rem(12px);
+        line-height: px2rem(18px);
+        background-image: url('./img/favor.png');  // url
+        background-repeat: no-repeat;              // repeat(no-repeat)
+        background-position: left 1px;             // position(left 1px)
+        background-size: px2rem(12px) px2rem(12px);// size(12px 12px)
+        padding-left: px2rem(20px);
+    }
+```
 
 4. Restanurant组件(商家tab) **[/page/detail/Restanurant]**
+```
+- 使用伪类 写图片icon background
+    &:before { // 伪类 写图片icon
+        display: block; // display(block)
+        content: ''; // content('')
+        margin-right: px2rem(20px);
+        width: px2rem(16px);
+        height: px2rem(16px);
+        background-size: cover; 
+        
+        width: px2rem(19px); // 这个可以单独设置
+        background-image: url('./img/tel.png'); // 这个可以单独设置
+    }
+- 初始化滚动位置
+    <div className="right-content">
+        <ul>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+    </div>  
+    
+    itemClick(index){
+        document.querySelector('.right-content').scrollTop = 0
+        
+
+        /* 只有基于html body 滚动 才能这么写 */
+        console.log('document.documentElement.scrollTop：',document.documentElement.scrollTop);
+        if(document.documentElement.scrollTop){
+            document.documentElement.scrollTop = 0
+        }{
+            document.body.scrollTop = 0
+        }
+    }
+```
