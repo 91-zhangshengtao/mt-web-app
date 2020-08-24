@@ -32,6 +32,7 @@
   react-dom@16.2.0
   react-redux@5.0.7
   react-router-dom@4.2.2
+  react-loadable@5.4.0  // 配合react-router-dom  组件懒加载
   react-router-redux@5.0.0-alpha.9
   history@4.7.2 // router需要
   redux@3.7.2
@@ -1192,4 +1193,77 @@ const store = createStore(mainReducer,
             document.body.scrollTop = 0
         }
     }
+```
+
+## 六、性能优化 
+1. 组件懒加载(结合router)
+**方式一 需要依赖包react-loadable**
+```jsx
+import React, { Suspense, lazy } from 'react'
+import {  
+    // BrowserRouter as Router, // 外层有ConnectedRouter
+    Route, 
+    withRouter, 
+    Switch 
+} from 'react-router-dom';
+import Loadable from 'react-loadable';
+import { connect } from 'react-redux';
+
+/** 组件懒加载方式1 */
+import Loading from './Loading';
+const Order1 = Loadable({
+    loader: () => import(/* webpackChunkName: "order" */'../Order/Order'), // webpackChunkName: 加载出来js文件名
+    loading: Loading, // 占位组件
+});
+
+const My1 = Loadable({
+    loader: () => import(/* webpackChunkName: "my" */'../My/My'),
+    loading: Loading,
+});
+/** 组件懒加载方式2 */
+// 需要react16.6 以上版本
+const Order2 = React.lazy(() => import(/* webpackChunkName: "order" */'../Order/Order') )
+const My2 = React.lazy( () => import(/* webpackChunkName: "my" */'../My/My') )
+class Main extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+    render(){
+        return (
+            // // 组件懒加载方式1 react16.6以前 
+            // <div>
+            //     <Switch>
+            //         <Route exact path="/home" component={Home}/>
+            //         <Route path="/order" component={Order1}/>
+            //         <Route path="/my" component={My1}/>
+            //         {/* <Route path="/my" getComponent={loadMy}/> */} {/* 早些写法 在react-router-dom 4之前的写法 */}
+            //     </Switch>
+            //     <BottomBar />
+
+            // </div>
+            // // 组件懒加载方式2   react 16.6以后才能用(当前16.2 ==> 16.6.3)
+            <div>
+                <Suspense fallback={<div>loading...</div>}>
+                    <Switch>
+                        <Route exact path="/home" component={Home}/>
+                        {/* bug --就是props需要通过函数返回而不是对象 */}
+                        <Route path="/order" component={(props) => <Order2 {...props}/>}/>
+                        <Route path="/my" component={(props)=><My2 {...props}/>}/>
+                    </Switch>
+                </Suspense> 
+                <BottomBar />
+            </div>
+        )
+    }
+}
+// export default connect(
+//     state =>({
+//         // key: state.tabReducer.num
+//     })
+// )(Main)
+export default withRouter(connect(
+    // state =>({
+        
+    // })
+)(Main));
 ```

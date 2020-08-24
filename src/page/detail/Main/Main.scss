@@ -31,11 +31,12 @@
     // tab
     .tab-bar {
         margin-top: px2rem(64px); // navHeader fixed  64
+        // fixed
         .tab-content{
             z-index: 99;
             position: fixed;
             width:100%;
-            top: px2rem(64px);
+            top: px2rem(65px);
             left:0;
             height:px2rem(45px);
             font-size: px2rem(16px);
