@@ -9,7 +9,7 @@ import { combineReducers } from 'redux';
 import { routerReducer } from 'react-router-redux';
 
 const reducers = combineReducers({
-    scrollViewReducer,
+    scrollViewReducer, // scrollView 控制防抖
     tabReducer,
     categoryReducer,
     contentListReducer,

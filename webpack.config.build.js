@@ -6,7 +6,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const fs = require('fs');
 const srcRoot = path.resolve(__dirname, 'src');
-const distPath = path.resolve(__dirname, '../waimaiServer/public');
+const distPath = path.resolve(__dirname, '../mt-web-server/public'); // 打包出来的 生成到本地 node-server
 const pageDir = path.resolve(srcRoot, 'page');
 const mainFile = 'index.js';
 
@@ -60,18 +60,25 @@ module.exports = {
     },
     output: {
         path: distPath,
-        filename: 'js/[name].[hash].min.js',
-        publicPath: '/' // 可根据自己实际情况修改
+        filename: 'js/[name].[hash].min.js', // '[name].min.js'
+        publicPath: '/' // 静态资源的根目录 可根据自己实际情况修改
     },
     module: {
         rules: [
             { test: /\.(js|jsx)$/, use: [{loader: 'babel-loader'},{loader: 'eslint-loader'}],include: srcRoot},
-            { test: /\.scss$/ , use:[MiniCssExtractPlugin.loader,{loader:'css-loader',options:{minimize:true}},'sass-loader', {
-                loader: 'sass-resources-loader',
-                options: {
-                    resources: srcRoot + '/component/rem_function.scss'
-                }
-            }], include: srcRoot},
+            { test: /\.scss$/ , use:[   
+                MiniCssExtractPlugin.loader, // css公共文件抽离   MiniCssExtractPlugin
+                {loader:'css-loader',options:{minimize:true}},  // css压缩
+                'sass-loader', 
+                {
+                    loader: 'sass-resources-loader',
+                    options: {
+                        resources: srcRoot + '/component/rem_function.scss'
+                    }
+                }], 
+                include: srcRoot}
+            ,
+            // 文件(图片) url-loader?limit=8192&name=./images/[name].[hash].[ext]
             { test: /\.(png|jpg|jpeg)$/, use: 'url-loader?limit=8192&name=./images/[name].[hash].[ext]' , include: srcRoot}
         ]
     },
@@ -88,12 +95,15 @@ module.exports = {
         }
     },
     plugins: [
-        new CleanWebpackPlugin([distPath],{allowExternal: true}),
+        // outpath 文件夹清空
+        new CleanWebpackPlugin([distPath],{allowExternal: true}), // 可以清除项目之外的 目录
+        // copy自动添加文件到 文件夹
         new CopyWebpackPlugin([
             { from: 'src/json', to: path.resolve(distPath, 'json'), force: true },
             { from: 'src/static', to: path.resolve(distPath, 'static'), force: true }
         ]),
-        new MiniCssExtractPlugin({
+        // css 公共文件抽离
+        new MiniCssExtractPlugin({ // MiniCssExtractPlugin
             filename: "css/[name].[hash].css",
         })
     ].concat(htmlArray)

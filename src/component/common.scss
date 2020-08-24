@@ -39,6 +39,6 @@
     -webkit-box-orient: vertical;
 }
 * {
-    -webkit-tap-highlight-color:transparent;
+    -webkit-tap-highlight-color:transparent; // 只用于iOS (iPhone和iPad) 点击js交互的元素(a)设置颜色
 }
 

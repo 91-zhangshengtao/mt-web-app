@@ -7,7 +7,7 @@ import scrollViewReducer from 'component/ScrollView/scrollViewReducer.js';
 import { combineReducers } from 'redux';
 
 const reducers = combineReducers({
-    scrollViewReducer,
+    scrollViewReducer,  // scrollView 控制防抖
     tabReducer,
     menuReducer,
     commentReducer,

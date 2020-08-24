@@ -2,7 +2,6 @@ const webpack = require('webpack')
 const path = require('path');
 /* plugin */
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-// const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const fs = require('fs');
 
 /* 路径  path.resolve(__dirname, 'x'x'x') */
@@ -23,8 +22,16 @@ function getHtmlArray(entryMap){
             htmlArray.push(new HtmlWebpackPlugin({
                 filename: key + '.html',
                 template: fileName,
-                chunks: [ 'common', key]
+                chunks: [ 'common', key] // common
             }));
+            // new HtmlWebpackPlugin({
+            //         template: path.join(srcPath, 'index.html'),
+            //         filename: 'index.html',
+            //         // chunks 表示该页面要引用哪些 chunk （即上面的 index 和 other），默认全部引用
+            //         chunks: ['index', 'vendor', 'common']  // 要考虑代码分割
+            //     }),
+
+
         }
 
 
@@ -110,6 +117,10 @@ module.exports = {
         hot: true
     },
     entry: entryMap, // 入口 {key1: value1, key2: value2}
+    // entry: {
+    //     index: path.join(srcPath, 'index.js'),
+    //     other: path.join(srcPath, 'other.js')
+    // },
     resolve: { 
         alias: {
             component: path.resolve(srcRoot, 'component')
@@ -131,11 +142,14 @@ module.exports = {
             { 
                 test: /\.css$/ , use:[
                     'style-loader',{
-                        'loader':'css-loader',// options:{minimize: true}
+                        'loader':'css-loader',
+                        options:{minimize: true} // css压缩
                     }],
                 include: srcRoot
             },
-            { test: /\.scss$/ , use:['style-loader','css-loader','sass-loader', 
+            { test: /\.scss$/ , use:[ 
+                'style-loader',
+                'css-loader','sass-loader', 
                 {
                     loader: 'sass-resources-loader', // 打包时 加载进去
                     options: {
@@ -146,23 +160,39 @@ module.exports = {
             { test: /\.(png|jpg|jpeg)$/, use: 'url-loader?limit=8192' , include: srcRoot} //大致8K, < 8192 转base64,>=8192 直接引入静态资源
         ]
     },
-    // optimization: {
-    //     splitChunks:{
-    //         cacheGroups:{
-    //             common: {
-    //                 test: /[\\/]node_modules[\\/]/,
-    //                 chunks: 'all',
-    //                 name: 'common'
-    //             }
-    //         }
-    //     }
-    // },
+    optimization: {
+        // js css公共组件抽离
+        splitChunks:{
+            cacheGroups:{
+                /*
+                    initial 入口 chunk，对于异步导入的文件不处理
+                    async 异步 chunk，只对异步导入的文件处理
+                    all 全部 chunk
+                */
+                // 公共的模块
+                common: {
+                    test: /[\\/]node_modules[\\/]/,
+                    chunks: 'all', // all
+                    name: 'common' // 打包处理文件名
+                }
+            }
+        }
+    },
     plugins: [
-        new webpack.NamedModulesPlugin(), // 热更新
+        new webpack.NamedModulesPlugin(), // 热更新(热加载时直接返回更新文件名，而不是文件的id。)
         new webpack.HotModuleReplacementPlugin(), //热更新
-        // new MiniCssExtractPlugin({
-        //     filename: "[name].css",
-        //     chunkFilename: "[id].css"
-        // })
+        //  // 多入口 - 生成 index.html
+        //  new HtmlWebpackPlugin({
+        //         template: path.join(srcPath, 'index.html'),
+        //         filename: 'index.html',
+        //         // chunks 表示该页面要引用哪些 chunk （即上面的 index 和 other），默认全部引用
+        //         chunks: ['index', 'vendor', 'common']  // 要考虑代码分割
+        //   }),
+        //   // 多入口 - 生成 other.html
+        //   new HtmlWebpackPlugin({
+        //         template: path.join(srcPath, 'other.html'),
+        //         filename: 'other.html',
+        //         chunks: ['other', 'common']  // 考虑代码分割
+        //   })
     ].concat(htmlArray) // htmlArray ：HtmlWebpackPlugin template 配置
 };

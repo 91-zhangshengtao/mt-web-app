@@ -42,7 +42,7 @@ class Category extends React.Component {
             )
         });
     }
-
+    
     render(){
         return (
             <div className="category-content clearfix">{this.renderItems()}</div>

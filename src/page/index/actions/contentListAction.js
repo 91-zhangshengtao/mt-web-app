@@ -3,6 +3,7 @@ import { CHANGEREADYSTATE } from 'component/ScrollView/scrollViewActionsTypes.js
 import axios from 'axios';
 
 export const getListData = (page)=> (dispatch) =>{
+    // 防抖 初始化
     dispatch({
         type: CHANGEREADYSTATE,
         obj: false
@@ -17,7 +18,7 @@ export const getListData = (page)=> (dispatch) =>{
                 currentPage: page, 
                 obj: resp.data
             });
-
+            // 防抖
             dispatch({
                 type: CHANGEREADYSTATE,
                 obj: true

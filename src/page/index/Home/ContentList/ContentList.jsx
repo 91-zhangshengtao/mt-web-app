@@ -58,6 +58,13 @@ class ContentList extends React.Component {
             return <ListItem key={index} itemData={item}></ListItem>
         });
     }
+    componentDidMount(){
+        if(document.documentElement.scrollTop){
+            document.documentElement.scrollTop = 0
+        }{
+            document.body.scrollTop = 0
+        }
+    }
 
     render(){
         return (

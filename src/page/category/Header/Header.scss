@@ -149,6 +149,10 @@
             overflow-x: hidden;
             overflow-y: auto;
             -webkit-overflow-scrolling:touch;
+                //  在safari有各种bug ，能不用尽量不用  https://www.cnblogs.com/xiahj/p/8036419.html
+                //   解决方法 在webkit-overflow-scrolling:touch属性的下一层子元素上，将height加1%或1px。从而主动触发scroll。
+                // touch; 当手指从触摸屏上移开，会保持一段时间的滚动 
+                // auto; 当手指从触摸屏上移开，滚动会立即停止
             background-color: #fff;
             > ul {
                 display: none; // none

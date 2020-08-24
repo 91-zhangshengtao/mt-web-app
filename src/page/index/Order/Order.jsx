@@ -53,6 +53,13 @@ class Order extends React.Component {
             return <ListItem itemData={item} key={index}></ListItem>
         });
     }
+    componentDidMount(){
+        if(document.documentElement.scrollTop){
+            document.documentElement.scrollTop = 0
+        }{
+            document.body.scrollTop = 0
+        }
+    }
     render(){
         return (
             <div className="order">

@@ -23,10 +23,6 @@
   webpack.config.dev.js
   webpack.config.build.js
 
-- 安装 webpack配置 插件
-  html-webpack-plugin@3.2.0      // html模板
-  html-webpack-inline-source-plugin@0.0.10
-
 - react相关的插件
   react@16.2.0
   react-dom@16.2.0
@@ -57,6 +53,7 @@
   node-sass@4.9.0
   url-loader@1.0.1
   file-loader@1.1.11
+ 
 
 - eslint
   eslint@4.19.1
@@ -64,9 +61,16 @@
   eslint-plugin-react@7.7.0
   babel-eslint@8.2.3
 
-- webpack热加载
+- 热加载
   react-hot-loader@4.0.0
   babel-plugin-react-hot-loader@3.0.0-beta.6
+
+- webpack 插件
+  html-webpack-plugin@3.2.0      // html模板
+  html-webpack-inline-source-plugin@0.0.10
+  mini-css-extract-plugin@0.4.0 // css 抽离
+  clean-webpack-plugin@0.1.19 // 清空output 文件夹
+  copy-webpack-plugin@4.5.1
 ```
 ```json
 "scripts": {
@@ -861,6 +865,22 @@ export default store
 ```
 2. Header组件(头部过滤) **[/page/category/Header/]**
 ```
+-  -webkit-tap-highlight-color:transparent; 
+        // 只用于iOS (iPhone和iPad) 点击js交互的元素(a)设置颜色
+
+- -webkit-overflow-scrolling:touch;
+    在safari有各种bug  https://www.cnblogs.com/xiahj/p/8036419.html
+        // 解决方法 在webkit-overflow-scrolling:touch属性的下一层子元素上，将height加1%或1px。从而主动触发scroll。
+    touch; 当手指从触摸屏上移开，会保持一段时间的滚动 
+    auto; 当手指从触摸屏上移开，滚动会立即停止
+
+    .panel-inner {
+        height: px2rem(300px);
+        overflow-x: hidden;
+        overflow-y: auto;
+        -webkit-overflow-scrolling:touch;
+    }
+
 - n个元素间用 | 等分
     .item {
         color: #2f2f2f;
@@ -988,7 +1008,8 @@ export default store
             this.onIuput(e.target.value);
         });
     }
-- 初始化滚动条
+- 初始化滚动条(在父组件里设置, 不要在子组件写)
+
     // 初始化滚动条(该项目滚动加载基于html body的 不用设置overflow)
     componentDidUpdate(){
         console.log('scroll-componentDidUpdate')
@@ -1172,7 +1193,7 @@ const store = createStore(mainReducer,
         width: px2rem(19px); // 这个可以单独设置
         background-image: url('./img/tel.png'); // 这个可以单独设置
     }
-- 初始化滚动位置
+- 初始化滚动位置(在父组件里设置, 不要在子组件写)
     <div className="right-content">
         <ul>
             <li></li>
@@ -1266,4 +1287,313 @@ export default withRouter(connect(
         
     // })
 )(Main));
+```
+2. 分割代码  js css公共文件抽离
+- webpack官网`https://webpack.js.org/`,找`splitChunks`;
+- css  extract-text-webpack-plugin插件只支持到webpack3, webpack4 用mini-css-extract-plugin插件
+**mini-css-extract-plugin 不能与热更新 一起用**
+```js
+module.exports = {
+ module: {
+        rules: [
+            { test: /\.scss$/ , use:[   
+                MiniCssExtractPlugin.loader, // css公共文件抽离   MiniCssExtractPlugin
+                {loader:'css-loader',options:{minimize:true}}, 
+                'sass-loader', 
+                {
+                    loader: 'sass-resources-loader',
+                    options: {
+                        resources: srcRoot + '/component/rem_function.scss'
+                    }
+                }], 
+                include: srcRoot
+            }
+        ]
+    },
+    optimization: {
+        // js 公共文件抽离
+        splitChunks:{
+            cacheGroups:{
+                /*
+                    initial 入口 chunk，对于异步导入的文件不处理
+                    async 异步 chunk，只对异步导入的文件处理
+                    all 全部 chunk
+                */
+                // 公共的模块
+                common: {
+                    test: /[\\/]node_modules[\\/]/,
+                    chunks: 'all', // all
+                    name: 'common' // 打包处理文件名
+                }
+            }
+        }
+    },
+    plugins: [
+        //  多入口 - 生成 xxx.html
+        new HtmlWebpackPlugin({
+            template: path.join(pageDir, 'index.html'),
+            filename: 'index.html',
+            // chunks 表示该页面要引用哪些 chunk （即上面的 index 和 other），默认全部引用
+            chunks: ['index', 'common']  // 引入文件名
+            template: fileName,
+        }),
+        new HtmlWebpackPlugin({
+            template: path.join(pageDir, 'detail.html'),
+            filename: 'detail.html',
+            chunks: ['detail', 'common']  // 引入文件名
+        }),
+        // css 公共文件抽离
+        new MiniCssExtractPlugin({ //  MiniCssExtractPlugin
+            filename: "css/[name].[hash].css",
+        })
+    ]
+}
+```
+- 补充热更新(dev)
+```js
+const webpack = require('webpack')
+const path = require('path');
+/* plugin */
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+module.exports = {
+    mode: 'development',
+    devServer: {
+        contentBase: devPath,
+        hot: true // 热更新
+    },
+    entry: {
+        index: path.join(srcPath, 'index.js'),
+        other: path.join(srcPath, 'other.js')
+    },
+    // 扩展名
+    resolve: { 
+        alias: {
+            component: path.resolve(srcRoot, 'component')
+        },
+        extensions: ['.js','.jsx'] // 扩展名省略
+    },
+    output: {
+        path: devPath,
+        filename: '[name].min.js' // 根据entry
+    },
+    module: {
+        rules: [
+            { test: /\.(js|jsx)$/, use: [
+                    {loader: 'babel-loader'},
+                    {loader: 'eslint-loader'} // 加eslint-loader
+                ],
+                include: srcRoot // sr文件夹下生效
+            },
+            { 
+                test: /\.css$/ , use:[
+                    'style-loader',{
+                        'loader':'css-loader',// options:{minimize: true}
+                    }],
+                include: srcRoot
+            },
+            { test: /\.scss$/ , use:[ 
+                'style-loader',
+                'css-loader','sass-loader', 
+                {
+                    loader: 'sass-resources-loader', // 打包时 加载进去
+                    options: {
+                        resources: srcRoot + '/component/rem_function.scss'
+                    }
+                }
+            ], include: srcRoot},
+            { test: /\.(png|jpg|jpeg)$/, use: 'url-loader?limit=8192' , include: srcRoot} 
+            //大致8K, < 8192 转base64,>=8192 直接引入静态资源
+        ]
+    },
+    optimization: {
+        // js css公共组件抽离
+        splitChunks:{
+            cacheGroups:{
+                /*
+                    initial 入口 chunk，对于异步导入的文件不处理
+                    async 异步 chunk，只对异步导入的文件处理
+                    all 全部 chunk
+                */
+                // 公共的模块
+                common: {
+                    test: /[\\/]node_modules[\\/]/,
+                    chunks: 'all', // all
+                    name: 'common' // 打包处理文件名
+                }
+            }
+        }
+    },
+    plugins: [
+        new webpack.NamedModulesPlugin(), // 热更新(热加载时直接返回更新文件名，而不是文件的id。)
+        new webpack.HotModuleReplacementPlugin(), //热更新
+        //  多入口 - 生成 xxx.html(Deomo)
+        new HtmlWebpackPlugin({
+            template: path.join(PagePath, 'index.html'),
+            filename: 'index.html',
+            // chunks 表示该页面要引用哪些 chunk （即上面的 index 和 other），默认全部引用
+            chunks: ['index', 'common']  // 引入文件名
+        }),
+        new HtmlWebpackPlugin({
+            template: path.join(PagePath, 'detail.html'),
+            filename: 'detail.html',
+            chunks: ['detail', 'common']  // 引入文件名
+        })
+    ]
+};
+```
+3. 首页tab数据加载优化
+- 防抖(在scrollView里   进行redux 全局控制)
+**对应入口reducers/Main.js**
+```js
+import { combineReducers } from 'redux';
+const reducers = combineReducers({
+    scrollViewReducer,  // scrollView 控制防抖
+    tabReducer,
+    menuReducer,
+    commentReducer,
+    restanurantReducer,
+});
+
+export default reducers;
+```
+**对应入口actions/xxx.js**
+```js
+export const getListData = (page)=> (dispatch) =>{
+    // 防抖 初始化
+    dispatch({
+        type: CHANGEREADYSTATE,
+        obj: false
+    });
+    axios({
+        method: 'get',
+        url: './json/homelist.json'
+    }).then((resp)=>{
+        window.setTimeout(()=>{
+            dispatch({
+                type: LIST_DATA,
+                currentPage: page, 
+                obj: resp.data
+            });
+            // 防抖
+            dispatch({
+                type: CHANGEREADYSTATE,
+                obj: true
+            });
+        },1500);
+
+    });
+}
+```
+4. 打包优化(build)
+```js
+const webpack = require('webpack');
+const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const fs = require('fs');
+const srcRoot = path.resolve(__dirname, 'src');
+const distPath = path.resolve(__dirname, '../mt-web-server/public'); // 打包出来的 生成到本地 node-server
+const pageDir = path.resolve(srcRoot, 'page');
+const mainFile = 'index.js';
+
+function getHtmlArray(entryMap){
+    let htmlArray = [];
+    Object.keys(entryMap).forEach((key)=>{
+        let fullPathName = path.resolve(pageDir, key);
+        let fileName = path.resolve(fullPathName, key + '.html');
+
+        if (fs.existsSync(fileName)) {
+            htmlArray.push(new HtmlWebpackPlugin({
+                filename: key + '.html',
+                template: fileName,
+                chunks: [ 'common', key]
+            }));
+        }
+
+
+    });
+    return htmlArray;
+}
+
+function getEntry(){
+    let entryMap = {};
+
+    fs.readdirSync(pageDir).forEach((pathname)=>{
+        let fullPathName = path.resolve(pageDir, pathname);
+        let stat = fs.statSync(fullPathName);
+        let fileName = path.resolve(fullPathName, mainFile);
+
+        if (stat.isDirectory() && fs.existsSync(fileName)) {
+            entryMap[pathname] = fileName;
+        }
+    });
+
+    return entryMap;
+
+}
+
+const entryMap = getEntry();
+const htmlArray = getHtmlArray(entryMap);
+
+module.exports = {
+    mode: 'production',
+    entry: entryMap,
+    resolve: {
+        alias: {
+            component: path.resolve(srcRoot, 'component')
+        },
+        extensions: ['.js','.jsx']
+    },
+    output: {
+        path: distPath,
+        filename: 'js/[name].[hash].min.js', // '[name].min.js'
+        publicPath: '/' // 静态资源的根目录 可根据自己实际情况修改
+    },
+    module: {
+        rules: [
+            { test: /\.(js|jsx)$/, use: [{loader: 'babel-loader'},{loader: 'eslint-loader'}],include: srcRoot},
+            { test: /\.scss$/ , use:[   
+                MiniCssExtractPlugin.loader, // css公共文件抽离   MiniCssExtractPlugin
+                {loader:'css-loader',options:{minimize:true}},  // css压缩
+                'sass-loader', 
+                {
+                    loader: 'sass-resources-loader',
+                    options: {
+                        resources: srcRoot + '/component/rem_function.scss'
+                    }
+                }], 
+                include: srcRoot}
+            ,
+            // 文件(图片) url-loader?limit=8192&name=./images/[name].[hash].[ext]
+            { test: /\.(png|jpg|jpeg)$/, use: 'url-loader?limit=8192&name=./images/[name].[hash].[ext]' , include: srcRoot}
+        ]
+    },
+    optimization: {
+        splitChunks:{
+            cacheGroups:{
+                common: {
+                    test: /[\\/]node_modules[\\/]/,
+                    chunks: 'all',
+                    name: 'common'
+                }
+            }
+        }
+    },
+    plugins: [
+        // outpath 文件夹清空
+        new CleanWebpackPlugin([distPath],{allowExternal: true}), // 可以清除项目之外的 目录
+        // copy自动添加文件到 文件夹
+        new CopyWebpackPlugin([
+            { from: 'src/json', to: path.resolve(distPath, 'json'), force: true },
+            { from: 'src/static', to: path.resolve(distPath, 'static'), force: true }
+        ]),
+        // css 公共文件抽离
+        new MiniCssExtractPlugin({ // MiniCssExtractPlugin
+            filename: "css/[name].[hash].css",
+        })
+    ].concat(htmlArray)
+};
+
 ```

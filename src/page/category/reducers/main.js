@@ -8,7 +8,7 @@ import { combineReducers } from 'redux';
 
 
 const reducers = combineReducers({
-    scrollViewReducer,
+    scrollViewReducer,  // scrollView 控制防抖
     headerReducer,
     contentListReducer
 });

@@ -53,11 +53,16 @@ class ScrollView extends React.Component {
         console.log('scroll-componentDidUpdate')
         const top = document.documentElement.scrollTop || document.body.scrollTop; // 滚动条的位置
         console.log('top:',top)
-        if(document.documentElement.scrollTop){
-            document.documentElement.scrollTop = 0
-        }{
-            document.body.scrollTop = 0
-        }
+         
+        // 不用这里设置了
+        // if(top > 0 && !this.props.isend){
+        //     if(document.documentElement.scrollTop){
+        //         document.documentElement.scrollTop = 0
+        //     }{
+        //         document.body.scrollTop = 0
+        //     }
+        // }
+        
     }
     render(){
         return (
