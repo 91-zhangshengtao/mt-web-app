@@ -81,6 +81,14 @@ class ListItem extends React.Component {
     }
     goDetail(data){
         window.location.href = './detail.html?id=' + data.id;
+        /*
+            jsinvoke({cmd, data}, callback)
+                let url = "jsbridge://" + cmd + "?c=" + JSON.stringify(data)
+
+                let functionName = 'CALLBACK0' // CALLBACK1 CALLBACK2 ....
+                window[functionName] = callback;
+        */
+
         // jsinvoke({
         //     cmd: 'openUrl',
         //     data: {
